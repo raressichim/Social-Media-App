@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SocialMediaApplication {
     public static void main(String[] args) {
         System.out.println("test merge");
+        System.out.println("GEORGE");
         SpringApplication.run(SocialMediaApplication.class, args);
     }
 
