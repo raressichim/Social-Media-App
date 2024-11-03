@@ -83,7 +83,6 @@ svg {
   border-radius: 30px;
   border-color: gray;
   padding-left: 50px;
-  margin-bottom: 1em;
 }
 
 .input-with-svg svg {
@@ -111,5 +110,4 @@ svg {
 
 .inline-divs .input-with-svg input {
   width: 9em;
-  margin-bottom: 1em;
 }
