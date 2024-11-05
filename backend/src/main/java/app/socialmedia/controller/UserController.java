@@ -21,7 +21,7 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public UserResponseDto addUser(@RequestBody UserRequestDto userDto){
         log.info(userDto.toString());
         return userService.addUser(userDto);

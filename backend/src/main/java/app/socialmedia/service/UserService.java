@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserService {
+public class UserService implements UserDetailsService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private Rules rules;
@@ -48,5 +51,20 @@ public class UserService {
         } catch (DataIntegrityViolationException ex){
             throw new EmailAlreadyExistsException();
         }
+    }
+
+    public boolean validateUser(String email, String password) {
+        User tempUser = userRepository.findByEmail(email);
+        return tempUser.getPassword().equals(password);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);
+        if(user ==null){
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), new ArrayList<>());
+
     }
 }
