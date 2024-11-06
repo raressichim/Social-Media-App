@@ -3,8 +3,11 @@ package app.socialmedia.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -22,11 +25,11 @@ public class TokenService {
     @Value("${jwt.sessionTokenDuration}")
     private int sessionTokenDuration;
 
-    public String generateToken(String email) {
+    public String generateToken(String email,String type) {
         Date sessionTokenExp = Date.from(ZonedDateTime.now().plusMinutes(sessionTokenDuration).toInstant());
         return Jwts.builder()
                 .claim("user_id", email)
-                .claim("type", "session")
+                .claim("type", type)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(sessionTokenExp)
                 .signWith(getJwtKey())
@@ -66,5 +69,26 @@ public class TokenService {
 
         response.put("valid", valid);
         return response;
+    }
+
+    public void addTokensToCookies(String sessionToken, String refreshToken, HttpServletResponse response) {
+        ResponseCookie sessionTokenCookie =
+                ResponseCookie.from("sessionToken", sessionToken)
+                        .httpOnly(true) // Set HttpOnly to prevent JavaScript access
+                        .secure(false) // Set secure to false, consider true in production with HTTPS
+                        .path("/") // Set cookie path to the root
+                        .maxAge(3600)
+                        .build();
+
+        ResponseCookie refreshTokenCookie =
+                ResponseCookie.from("refreshToken", refreshToken)
+                        .httpOnly(true) // Set HttpOnly to prevent JavaScript access
+                        .secure(false) // Set secure to false, consider true in production with HTTPS
+                        .path("/") // Set cookie path to the root
+                        .maxAge(3600)
+                        .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, sessionTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     }
 }

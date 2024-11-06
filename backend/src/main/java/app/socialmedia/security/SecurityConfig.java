@@ -9,11 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -28,12 +25,14 @@ public class SecurityConfig  {
 
     private JwtAuthFilter jwtAuthFilter;
     private UserService userService;
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(HttpMethod.POST,"/api/auth", "/api/users/register")
+                        authorize
+                                .requestMatchers(HttpMethod.POST,"/api/auth", "/api/users/register")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -47,21 +46,12 @@ public class SecurityConfig  {
     }
 
 
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-    }
-
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        configureGlobal(authenticationManagerBuilder);
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
         return authenticationManagerBuilder.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

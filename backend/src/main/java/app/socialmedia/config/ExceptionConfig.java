@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionConfig {
+
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorMessage> handleCustomException(CustomException ex) {
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage());

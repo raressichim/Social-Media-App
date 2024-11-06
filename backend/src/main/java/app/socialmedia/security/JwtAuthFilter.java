@@ -34,12 +34,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         if (token == null || !token.startsWith("Bearer")) {
             unauthorizedResponse(response);
             return;
         }
         token = token.substring(7);
+
+        if (request.getRequestURI().equals("/api/auth/refresh") && !validateRefreshToken(token)) {
+            unauthorizedResponse(response);
+        } else {
+            log.info("Refresh token sent");
+            String email = tokenService.getClaims(token).get("user_id").toString();
+            String sessionToken = tokenService.generateToken(email, "session");
+            String refreshToken = tokenService.generateToken(email, "refresh");
+            tokenService.addTokensToCookies(sessionToken, refreshToken, response);
+            filterChain.doFilter(request, response);
+        }
+
         if (!validateSessionToken(token)) {
             unauthorizedResponse(response);
         }
@@ -58,7 +69,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         response.setStatus(401);
     }
 
-    private boolean validateSessionToken(String token) {
+    private boolean validateToken(String token) {
         try {
             Map<String, Object> validatedSessionToken = tokenService.validateToken(token);
             if (!Objects.equals(validatedSessionToken.get("valid").toString(), "true")) {
@@ -66,11 +77,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return false;
             }
 
-            Claims claims = tokenService.getClaims(token);
-            return claims.get("type").equals("session");
         } catch (Exception e) {
             return false;
         }
+        return true;
     }
 
+    private boolean validateSessionToken(String token) {
+        if (!validateToken(token)) {
+            return false;
+        }
+        Claims claims = tokenService.getClaims(token);
+        return claims.get("type").equals("session");
+    }
+
+    private boolean validateRefreshToken(String token) {
+        if (!validateToken(token)) {
+            return false;
+        }
+        Claims claims = tokenService.getClaims(token);
+        return claims.get("type").equals("refresh");
+    }
 }
