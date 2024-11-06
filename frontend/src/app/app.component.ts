@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 
 @Component({
@@ -13,6 +14,7 @@ import { HeaderComponent } from './components/header/header.component';
     RouterLinkActive,
     SigninComponent,
     SignupComponent,
+    HomeComponent,
     HeaderComponent,
   ],
   templateUrl: './app.component.html',

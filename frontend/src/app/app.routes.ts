@@ -20,4 +20,12 @@ export const routes: Routes = [
       );
     },
   },
+  {
+    path: 'home',
+    loadComponent: () => {
+      return import('./components/home/home.component').then(
+        (m) => m.HomeComponent
+      );
+    },
+  },
 ];

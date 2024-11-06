@@ -4,7 +4,9 @@ import app.socialmedia.dto.UserRequestDto;
 import app.socialmedia.dto.UserResponseDto;
 import app.socialmedia.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class UserController {
-    private UserService userService;
+    private @Lazy UserService userService;
 
     @GetMapping
     public List<UserResponseDto> getAllUsers(){

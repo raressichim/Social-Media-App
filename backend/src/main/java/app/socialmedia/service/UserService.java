@@ -16,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ public class UserService implements UserDetailsService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private Rules rules;
+    private PasswordEncoder passwordEncoder;
+
+
 
     public List<UserResponseDto> findAllUsers() {
         List<User> users = userRepository.findAll();
@@ -46,6 +51,7 @@ public class UserService implements UserDetailsService {
             if(!rules.isValidEmail(userDto.getEmail())){
                 throw new InvalidEmailException();
             }
+            userDto.setPassword(passwordEncoder().encode(userDto.getPassword()));
             User user = userRepository.save(modelMapper.map(userDto, User.class));
             return modelMapper.map(user, UserResponseDto.class);
         } catch (DataIntegrityViolationException ex){
@@ -66,5 +72,10 @@ public class UserService implements UserDetailsService {
         }
         return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), new ArrayList<>());
 
+    }
+
+    public PasswordEncoder passwordEncoder(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        return encoder;
     }
 }
