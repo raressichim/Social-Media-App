@@ -32,7 +32,7 @@ public class SecurityConfig  {
         return httpSecurity
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(HttpMethod.POST,"/api/auth", "/api/users/register")
+                                .requestMatchers(HttpMethod.POST,"/api/auth/**", "/api/users/register")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

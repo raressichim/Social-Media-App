@@ -1,5 +1,6 @@
 package app.socialmedia.security;
 
+import app.socialmedia.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,47 +25,56 @@ import java.util.Objects;
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
     private TokenService tokenService;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
 
-        if (request.getRequestURI().equals("/api/users/register") || request.getRequestURI().equals("/api/auth")) {
+        if (request.getRequestURI().equals("/api/users/register") || request.getRequestURI().equals("/api/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
+
         if (token == null || !token.startsWith("Bearer")) {
             unauthorizedResponse(response);
             return;
         }
         token = token.substring(7);
 
-        if (request.getRequestURI().equals("/api/auth/refresh") && !validateRefreshToken(token)) {
-            unauthorizedResponse(response);
-        } else {
-            log.info("Refresh token sent");
+        if (request.getRequestURI().equals("/api/auth/refresh")) {
+            if (!validateRefreshToken(token)) {
+                unauthorizedResponse(response);
+                return;
+            }
             String email = tokenService.getClaims(token).get("user_id").toString();
             String sessionToken = tokenService.generateToken(email, "session");
             String refreshToken = tokenService.generateToken(email, "refresh");
             tokenService.addTokensToCookies(sessionToken, refreshToken, response);
+            log.info("Refresh token sent");
             filterChain.doFilter(request, response);
+            return;
         }
 
         if (!validateSessionToken(token)) {
             unauthorizedResponse(response);
+            log.error(" Invalid session token");
+            return;
         }
-        log.info("Session token is valid");
         String email = tokenService.getClaims(token).get("user_id").toString();
-        UserDetails userDetails = User.withUsername(email).password("").build();
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null);
+        UserDetails userDetails = userService.loadUserByUsername(email);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
     }
 
     private void unauthorizedResponse(HttpServletResponse response) {
-        ResponseCookie sessionTokenCookie = ResponseCookie.from("sessionToken", "").httpOnly(true).secure(false).path("/").maxAge(0) // Expire immediately
+        ResponseCookie invalidSessionTokenCookie = ResponseCookie.from("sessionToken", "").httpOnly(true).secure(false).path("/").maxAge(0) // Expire immediately
                 .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, sessionTokenCookie.toString());
+        ResponseCookie invalidRefreshTokenCookie = ResponseCookie.from("refreshToken", "").httpOnly(true).secure(false).path("/").maxAge(0) // Expire immediately
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, invalidSessionTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, invalidRefreshTokenCookie.toString());
         response.setStatus(401);
     }
 
