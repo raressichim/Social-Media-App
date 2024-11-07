@@ -12,7 +12,7 @@
         <h3>Welcome</h3>
         <p>Please enter your credentials to continue</p>
       </div>
-      <form action="#" class="inputs">
+      <form (ngSubmit)="onSubmit()" action="#" class="inputs">
         <div class="input-with-svg">
           <svg
             width="19"
@@ -26,7 +26,7 @@
               fill="#7D7D7D"
             />
           </svg>
-          <input type="email" name="email" placeholder="Email" />
+          <input type="email" name="email" [(ngModel)]="email" required placeholder="Email" />
         </div>
         <div class="input-with-svg">
           <svg
@@ -42,10 +42,10 @@
             />
           </svg>
 
-          <input type="password" name="password" placeholder="Password" />
+          <input type="password" name="password" [(ngModel)]="password" required placeholder="Password" />
         </div>
-        <button type="submit">Login</button>
-        <a style="text-decoration: none" href="#">Forgot your password?</a>
+        <button type="submit" style="cursor: pointer">Login</button>
+        <a style="text-decoration: none" href="#" (click)="onForgotPassword()" ng>Forgot your password?</a>
       </form>
     </div>
   </div>

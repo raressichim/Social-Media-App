@@ -28,4 +28,8 @@ public class AuthService {
         log.warn(sessionToken);
         log.warn(refreshToken);
     }
+
+    public void logout(HttpServletResponse response) {
+        tokenService.addEmptyCookies(response,200);
+    }
 }

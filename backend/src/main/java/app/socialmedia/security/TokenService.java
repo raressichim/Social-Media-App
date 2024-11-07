@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -50,7 +51,40 @@ public class TokenService {
         }
     }
 
-    protected Map<String, Object> validateToken(String token) {
+    protected boolean validateToken(String token) {
+        if (token == null) {
+            return false;
+        }
+        try {
+            Map<String, Object> validatedSessionToken = validateClaims(token);
+            if (!Objects.equals(validatedSessionToken.get("valid").toString(), "true")) {
+                log.error(validatedSessionToken.get("error").toString());
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean validateSessionToken(String token) {
+        if (!validateToken(token)) {
+            return false;
+        }
+        Claims claims = getClaims(token);
+        return claims.get("type").equals("session");
+    }
+
+    protected boolean validateRefreshToken(String token) {
+        if (!validateToken(token)) {
+            return false;
+        }
+        Claims claims = getClaims(token);
+        return claims.get("type").equals("refresh");
+    }
+
+    protected Map<String, Object> validateClaims(String token) {
         Map<String, Object> response = new HashMap<>();
         boolean valid = true;
 
@@ -69,6 +103,16 @@ public class TokenService {
 
         response.put("valid", valid);
         return response;
+    }
+
+    public void addEmptyCookies(HttpServletResponse response, int status) {
+        ResponseCookie invalidSessionTokenCookie = ResponseCookie.from("sessionToken", "").httpOnly(true).secure(false).path("/").maxAge(0) // Expire immediately
+                .build();
+        ResponseCookie invalidRefreshTokenCookie = ResponseCookie.from("refreshToken", "").httpOnly(true).secure(false).path("/").maxAge(0) // Expire immediately
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, invalidSessionTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, invalidRefreshTokenCookie.toString());
+        response.setStatus(status);
     }
 
     public void addTokensToCookies(String sessionToken, String refreshToken, HttpServletResponse response) {
