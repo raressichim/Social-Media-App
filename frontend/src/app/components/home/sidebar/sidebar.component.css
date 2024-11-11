@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(128, 128, 128, 0.247);
+  height: 100vh;
+  width: 100%;
+  box-shadow: 2px 0 5px -4px #888;
+  position: relative;
+  background-color: white;
+}
+
+.left-panel .left-navigator {
+  margin-bottom: 1em;
+  transition: all 0.5s;
+  border-radius: 10px;
+}
+
+.left-navigator:first-of-type {
+  margin-top: 1em;
+}
+
+.left-navigator {
+  display: flex;
+
+  height: 2em;
+  align-items: center;
+  padding-left: 1em;
+}
+
+.left-panel .left-navigator a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: color 0.5s;
+}
+
+.left-panel .left-navigator:hover {
+  background-color: #14213d;
+  width: 11em;
+  border-radius: 10px;
+}
+
+.left-panel .left-navigator:hover a {
+  color: white;
+  user-select: none;
+}
+
+.left-panel .left-navigator:hover a svg path {
+  fill: white;
+}
+
+.left-navigator a svg {
+  width: 24px;
+  height: 24px;
+  margin-right: 1em;
+}
+
+.left-navigator a svg path {
+  fill: #0c0c0c67;
+}

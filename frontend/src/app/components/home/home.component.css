@@ -1,68 +1,24 @@
 .container {
   display: flex;
-}
-
-.left-panel {
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid rgba(128, 128, 128, 0.247);
   height: 100vh;
-  width: 12em;
-  box-shadow: 2px 0 5px -4px #888;
   position: fixed;
+  width: 100vw;
+  background-color: whitesmoke;
 }
 
-.left-panel .left-navigator {
-  width: 11.2em;
-  margin-bottom: 1em;
-  transition: all 0.5s;
-  border-radius: 10px;
+.sidebar,
+.feed,
+.friendlist {
+  height: 100%;
 }
 
-.left-navigator:first-of-type {
-  margin-top: 1em;
+.sidebar,
+.friendlist {
+  flex-basis: 15%;
+  background-color: #f0f0f0;
 }
 
-.left-navigator {
-  display: flex;
-  width: 100%;
-  height: 2em;
-  align-items: center;
-  padding-left: 1em;
-}
-
-.left-panel .left-navigator a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-  border-radius: 10px;
-  transition: color 0.5s;
-}
-
-.left-panel .left-navigator:hover {
-  background-color: #14213d;
-  width: 11em;
-  border-radius: 10px;
-}
-
-.left-panel .left-navigator:hover a {
-  color: white;
-  user-select: none;
-}
-
-.left-panel .left-navigator:hover a svg path {
-  fill: white;
-}
-
-.left-navigator a svg {
-  width: 24px;
-  height: 24px;
-  margin-right: 1em;
-}
-
-.left-navigator a svg path {
-  fill: #0c0c0c67;
+.feed {
+  flex-basis: 70%;
+  background-color: #ffffff;
 }

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {AuthService} from '../../services/auth.service';
-import {FormsModule} from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -13,16 +14,17 @@ import {FormsModule} from '@angular/forms';
 export class SigninComponent {
   email: string = '';
   password: string = '';
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log(`Login successful for ${this.email}`, response);
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error(`Login failed for ${this.email}`, error);
-      }
+      },
     });
   }
 
@@ -33,9 +35,7 @@ export class SigninComponent {
       },
       error: (error) => {
         console.error(`Logout failed for ${this.email}`, error);
-      }
+      },
     });
   }
-
-
 }

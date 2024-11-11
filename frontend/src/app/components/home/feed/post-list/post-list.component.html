@@ -1,0 +1,9 @@
+<div class="container">
+  @for (post of posts; track $index) {
+  <div class="post">
+    <h3>{{ post.user.firstName }} {{ post.user.lastName }}</h3>
+    <h4>{{ post.relativeTime }}</h4>
+    <p>{{ post.body }}</p>
+  </div>
+  }
+</div>
