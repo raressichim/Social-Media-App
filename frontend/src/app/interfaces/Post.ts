@@ -5,5 +5,5 @@ export interface Post {
   user: User;
   body: string;
   date: string;
-  relativeTime?: string;
+  relativeTime: string;
 }

@@ -1,30 +1,38 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, tap} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Post} from '../interfaces/Post';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
-  constructor(private http: HttpClient) {}
+  private postsSubject = new BehaviorSubject<Post[]>([]);
+  posts$ = this.postsSubject.asObservable();
 
-  addPost(body: string): Observable<any> {
-    const newPostUrl = 'http://localhost:8080/api/posts';
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  constructor(private http: HttpClient) {
+  }
+
+  addPost(body: string): Observable<Post> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<any>(
-      newPostUrl,
-      { body },
+      'http://localhost:8080/api/posts',
+      {body},
       {
         headers,
         withCredentials: true,
-      }
+      }).pipe(
+      tap((newPost) => {
+        const currentPosts = this.postsSubject.value;
+        this.postsSubject.next([newPost, ...currentPosts]);
+      })
     );
   }
 
+
   getPosts(): Observable<any> {
-    const postUrl = 'http://localhost:8080/api/posts';
-    return this.http.get<any>(postUrl, {
-      withCredentials: true,
-    });
+    return this.http.get<Post[]>('http://localhost:8080/api/posts', {withCredentials: true}).pipe(
+      tap((posts) => this.postsSubject.next(posts))
+    );
   }
 }

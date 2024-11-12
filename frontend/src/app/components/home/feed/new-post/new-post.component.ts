@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Inject, Injectable} from '@angular/core';
 import { PostService } from '../../../../services/post.service';
 import { FormsModule } from '@angular/forms';
 
@@ -12,15 +12,15 @@ import { FormsModule } from '@angular/forms';
 export class NewPostComponent {
   body: string = '';
 
-  constructor(private addPost: PostService) {}
+  constructor(private postService: PostService) {}
 
   onClick(): void {
-    this.addPost.addPost(this.body).subscribe({
-      next: (response) => {
+    this.postService.addPost(this.body).subscribe({
+      next: () => {
         console.log('Post added');
-        this.body = ''; // Clear the input after posting
+        this.body = '';
       },
-      error: (error) => {
+      error: () => {
         console.error('Failed to add post');
       },
     });
