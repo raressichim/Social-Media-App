@@ -1,10 +1,13 @@
 package app.socialmedia.service;
 
+import app.socialmedia.dto.FriendRequestDto;
 import app.socialmedia.dto.UserRequestDto;
 import app.socialmedia.dto.UserResponseDto;
+import app.socialmedia.entity.Friendship;
 import app.socialmedia.entity.User;
 import app.socialmedia.exception.user.EmailAlreadyExistsException;
 import app.socialmedia.exception.user.InvalidEmailException;
+import app.socialmedia.repository.FriendshipRepository;
 import app.socialmedia.repository.UserRepository;
 import app.socialmedia.validation.Rules;
 import jakarta.transaction.Transactional;
@@ -25,6 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class UserService implements UserDetailsService {
+    private final FriendshipRepository friendshipRepository;
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private Rules rules;
@@ -42,15 +46,15 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserResponseDto addUser(UserRequestDto userDto) {
-        log.info("Saving user with email: {}",userDto.getEmail());
+        log.info("Saving user with email: {}", userDto.getEmail());
         try {
-            if(!rules.isValidEmail(userDto.getEmail())){
+            if (!rules.isValidEmail(userDto.getEmail())) {
                 throw new InvalidEmailException();
             }
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             User user = userRepository.save(modelMapper.map(userDto, User.class));
             return modelMapper.map(user, UserResponseDto.class);
-        } catch (DataIntegrityViolationException ex){
+        } catch (DataIntegrityViolationException ex) {
             throw new EmailAlreadyExistsException();
         }
     }
@@ -58,9 +62,11 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
-        if(user ==null){
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
     }
+
+
 }

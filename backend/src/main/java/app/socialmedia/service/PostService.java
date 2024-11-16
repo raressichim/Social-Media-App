@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class PostService {
 
 
     public List<Post> getAllPosts(){
-       return postRepository.findAll();
+       return postRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @Transactional
@@ -36,5 +37,12 @@ public class PostService {
        postRequest.setUser(user);
        postRequest.setDate(new Date(System.currentTimeMillis()));
        return postRepository.save(modelMapper.map(postRequest,Post.class));
+    }
+
+    public List<Post> getFriendsPosts(UserDetails user) {
+        User tempUser = userRepository.findByEmail(user.getUsername());
+        List<Long> friendIds = tempUser.getFriendships().stream().map(friendship -> friendship.getFriend().getId()).toList();
+        List<Post> friendsPosts = postRepository.findPostsByFriendsAndUser(friendIds,tempUser.getId() ,Sort.by(Sort.Direction.DESC, "id"));
+        return friendsPosts;
     }
 }
