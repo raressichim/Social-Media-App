@@ -1,13 +1,17 @@
 .container {
   display: flex;
+  height: 100vh;
+  top: 5em;
+  position: fixed;
+  width: 15%;
 }
 
 .left-panel {
   display: flex;
+  width: 100%;
   flex-direction: column;
   border-right: 1px solid rgba(128, 128, 128, 0.247);
   height: 100vh;
-  width: 100%;
   box-shadow: 2px 0 5px -4px #888;
   position: relative;
   background-color: white;
@@ -25,7 +29,6 @@
 
 .left-navigator {
   display: flex;
-
   height: 2em;
   align-items: center;
   padding-left: 1em;
@@ -44,7 +47,6 @@
 
 .left-panel .left-navigator:hover {
   background-color: #14213d;
-  width: 11em;
   border-radius: 10px;
 }
 

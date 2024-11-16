@@ -1,11 +1,12 @@
 .container {
   padding-top: 10px;
-  height: 100vh;
   width: 100%;
   background-color: whitesmoke;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 5.5em;
+  height: 100vh;
 }
 
 .new-post {
@@ -14,4 +15,10 @@
 
 .post-list {
   width: 80%;
+}
+
+@media (max-width: 1366px) {
+  .container {
+    height: 160vh !important;
+  }
 }

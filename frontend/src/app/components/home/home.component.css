@@ -1,8 +1,8 @@
 .container {
   display: flex;
+  width: 100%;
   height: 100vh;
-  position: fixed;
-  width: 100vw;
+  min-height: 100vh;
   background-color: whitesmoke;
 }
 
@@ -10,6 +10,7 @@
 .feed,
 .friendlist {
   height: 100%;
+  background-color: #f0f0f0;
 }
 
 .sidebar,
@@ -20,5 +21,17 @@
 
 .feed {
   flex-basis: 70%;
+  flex-grow: 1;
   background-color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .sidebar,
+  .friendlist {
+    flex-basis: 20%;
+  }
+
+  .feed {
+    flex-basis: 60%;
+  }
 }
