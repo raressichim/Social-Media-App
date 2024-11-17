@@ -1,1 +1,9 @@
-<div class="container"><p>friend-list works!</p></div>
+<div class="container">
+  <h2>Friends</h2>
+
+  @for (friend of friends; track $index) {
+  <div class="friend">
+    <h3>{{ friend.friend.firstName }} {{ friend.friend.lastName }}</h3>
+  </div>
+  }
+</div>
