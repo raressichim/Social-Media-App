@@ -4,12 +4,14 @@
   height: 100vh;
   min-height: 100vh;
   background-color: whitesmoke;
+  height: 100%;
 }
 
 .sidebar,
 .feed,
 .friendlist {
   height: 100%;
+  background-color: #f0f0f0;
   background-color: #f0f0f0;
 }
 
@@ -22,7 +24,19 @@
 .feed {
   flex-basis: 70%;
   flex-grow: 1;
+  flex-grow: 1;
   background-color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .sidebar,
+  .friendlist {
+    flex-basis: 20%;
+  }
+
+  .feed {
+    flex-basis: 60%;
+  }
 }
 
 @media (max-width: 768px) {
