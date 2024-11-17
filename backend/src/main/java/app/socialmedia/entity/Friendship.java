@@ -21,6 +21,6 @@ public class Friendship {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
+    @JoinColumn(name = "friend_id", unique = false)
     private User friend;
 }
