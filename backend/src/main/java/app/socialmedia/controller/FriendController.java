@@ -6,7 +6,6 @@ import app.socialmedia.entity.Post;
 import app.socialmedia.entity.User;
 import app.socialmedia.service.FriendshipService;
 import app.socialmedia.service.PostService;
-import app.socialmedia.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class FriendController {
 
-    private final UserService userService;
     private final PostService postService;
     private final FriendshipService friendshipService;
 

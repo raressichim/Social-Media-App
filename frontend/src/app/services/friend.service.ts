@@ -6,7 +6,7 @@ import { Friend } from '../interfaces/Friend';
 @Injectable({
   providedIn: 'root',
 })
-export class FriendsService {
+export class FriendService {
   constructor(private http: HttpClient) {}
 
   getFriends(): Observable<any> {

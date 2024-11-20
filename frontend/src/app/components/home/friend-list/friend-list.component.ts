@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Friend } from '../../../interfaces/Friend';
-import { FriendsService } from '../../../services/friends.service';
+import { FriendService } from '../../../services/friend.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -12,7 +12,7 @@ import { FriendsService } from '../../../services/friends.service';
 export class FriendListComponent {
   friends: Friend[] = [];
 
-  constructor(private friendService: FriendsService) {}
+  constructor(private friendService: FriendService) {}
 
   ngOnInit(): void {
     this.friendService.getFriends().subscribe({

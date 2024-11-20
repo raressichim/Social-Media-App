@@ -23,21 +23,15 @@ public class FriendshipService {
         User tempUser = userRepository.findByEmail(userDetails.getUsername());
         User friend = userRepository.findByEmail(user.getEmail());
 
-        Friendship friendship = new Friendship();
-        Friendship reciprocalFriendShip = new Friendship();
-
         List<Friendship> friendships = tempUser.getFriendships();
-        for(Friendship friendship1 : friendships) {
-            if(friendship1.getFriend().equals(friend)) {
+        for(Friendship tempFriendship : friendships) {
+            if(tempFriendship.getFriend().equals(friend)) {
                 throw new RuntimeException("Friendship already exists");
             }
         }
 
-        friendship.setUser(tempUser);
-        friendship.setFriend(friend);
-        reciprocalFriendShip.setUser(friend);
-        reciprocalFriendShip.setFriend(tempUser);
-
+        Friendship friendship = new Friendship(tempUser,friend);
+        Friendship reciprocalFriendShip = new Friendship(friend,tempUser);
 
         friendshipRepository.save(friendship);
         friendshipRepository.save(reciprocalFriendShip);
