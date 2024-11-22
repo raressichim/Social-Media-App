@@ -31,7 +31,7 @@ public class SecurityConfig  {
         return httpSecurity
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/auth/**", "/api/users/register")
+                                .requestMatchers("/api/auth/**", "/api/users/register","/chat")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -58,7 +58,7 @@ public class SecurityConfig  {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true); // Allow credentials like cookies or auth headers

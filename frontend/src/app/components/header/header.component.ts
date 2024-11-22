@@ -9,11 +9,12 @@ import {User} from '../../interfaces/User';
 import {UserService} from '../../services/user.service';
 import {MatList, MatListItem, MatListSubheaderCssMatStyler} from '@angular/material/list';
 import {MatDivider} from '@angular/material/divider';
+import {MatLine} from '@angular/material/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, MatFormField, MatIcon, FormsModule, MatInput, MatButton, MatIconModule, MatInputModule, MatList, MatListItem, MatDivider, MatListSubheaderCssMatStyler],
+  imports: [RouterLink, MatFormField, MatIcon, FormsModule, MatInput, MatButton, MatIconModule, MatInputModule, MatList, MatListItem, MatDivider, MatListSubheaderCssMatStyler, MatLine],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -40,7 +41,7 @@ export class HeaderComponent {
 
   filterResults(text: string) {
     if (!text) {
-      this.filteredUsers = this.allUsers;
+      this.filteredUsers = [];
       return;
     }
 

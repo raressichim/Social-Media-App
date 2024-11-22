@@ -3,11 +3,13 @@ nav {
   padding: 0;
   background-color: #fca311;
   width: 100%;
-  height: 5em;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   position: fixed;
+  z-index: 1;
 }
 
 ul {
@@ -24,7 +26,7 @@ ul {
   align-items: center;
   margin: 0 auto;
   height: auto;
-  width: 13em;
+  width: 30em;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
@@ -47,14 +49,10 @@ svg path {
 }
 
 .search-bar {
-  position: absolute;
-  top: 1em;
-  left: 15%;
-  transform: translateX(-50%);
-  width: 20%;
   height: 4em;
 }
 
 .search-component {
   display: flex;
+  flex-direction: column;
 }

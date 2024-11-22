@@ -1,26 +1,6 @@
 <nav>
   <!-- <img src="" alt="" /> -->
-  <div class="search-component">
-    <mat-form-field class="search-bar">
-      <span matPrefix> </span>
-      <input type="tel" matInput placeholder="Search" name= "search" [(ngModel)]= "search" #filter (keyup)="filterResults(filter.value)">
-      <button matSuffix mat-button (click)="filterResults(filter.value)"><mat-icon>search</mat-icon></button>
-    </mat-form-field>
-  <mat-list class="search-suggestions">
-    <h3 mat-subheader>Folders</h3>
-    @for (user of filteredUsers; track user) {
-      <mat-list-item>
-        <mat-icon mat-list-icon>folder</mat-icon>
-        <h4 mat-line>{{user.firstName}}</h4>
-        <h4 mat-line>{{user.lastName}}</h4>
-        @if (!$last) {
-          <mat-divider [inset]="true"></mat-divider>
-        }
-      </mat-list-item>
-    }
-    <mat-divider></mat-divider>
-  </mat-list>
-  </div>
+
   <ul class="tabs">
     <li>
       <a routerLink="/">
@@ -75,6 +55,26 @@
           fill="orange"
         />
       </svg>
+    </li>
+    <li>
+      <div class="search-component">
+        <mat-form-field class="search-bar" appearance="outline">
+          <span matPrefix> </span>
+          <input type="tel" matInput placeholder="Search" name= "search" [(ngModel)]= "search" #filter (keyup)="filterResults(filter.value)">
+          <button matSuffix mat-button (click)="filterResults(filter.value)"><mat-icon>search</mat-icon></button>
+        </mat-form-field>
+        <mat-list class="search-suggestions">
+          @for (user of filteredUsers; track user) {
+            <mat-list-item>
+              <h4 mat-line>{{user.firstName}} {{user.lastName}}</h4>
+              @if (!$last) {
+                <mat-divider [inset]="true"></mat-divider>
+              }
+            </mat-list-item>
+          }
+          <mat-divider></mat-divider>
+        </mat-list>
+      </div>
     </li>
   </ul>
 </nav>

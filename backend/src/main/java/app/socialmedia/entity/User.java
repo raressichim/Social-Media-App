@@ -37,4 +37,8 @@ public class User {
     @JsonIgnore
     @OneToMany
     private List<Friendship> friendships;
+
+    @JsonIgnore
+    @OneToMany
+    private List<Message> messages;
 }
