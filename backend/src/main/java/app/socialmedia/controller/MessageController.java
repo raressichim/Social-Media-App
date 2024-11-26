@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/messages")
 @AllArgsConstructor
 public class MessageController {
+    private final SimpMessagingTemplate brokerMessagingTemplate;
     private MessageService messageService;
 
     @GetMapping("/{receiverId}")
@@ -29,6 +31,7 @@ public class MessageController {
                                   @RequestBody MessageDTO messageDTO) {
         return messageService.sendMessage(messageDTO, user);
     }
+
 
 
 }

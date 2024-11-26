@@ -1,5 +1,6 @@
 package app.socialmedia.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,4 +42,9 @@ public class User {
     @JsonIgnore
     @OneToMany
     private List<Message> messages;
+
+    @JsonCreator
+    public User(String username) {
+        this.firstName = username; // or any suitable field
+    }
 }

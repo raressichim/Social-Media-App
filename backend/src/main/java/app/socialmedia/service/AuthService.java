@@ -1,6 +1,8 @@
 package app.socialmedia.service;
 
 import app.socialmedia.dto.LoginRequestDto;
+import app.socialmedia.entity.User;
+import app.socialmedia.repository.UserRepository;
 import app.socialmedia.security.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -14,10 +16,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Slf4j
 public class AuthService {
+    private final UserRepository userRepository;
     private AuthenticationManager authenticationManager;
     private TokenService tokenService;
 
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public User login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         authenticationManager.authenticate(authentication);
         String email = loginRequestDto.getEmail();
@@ -27,6 +30,7 @@ public class AuthService {
         log.info("Logged in user with email: {}", email);
         log.warn(sessionToken);
         log.warn(refreshToken);
+        return userRepository.findByEmail(email);
     }
 
     public void logout(HttpServletResponse response) {

@@ -22,9 +22,3 @@ body {
 .post-list {
   width: 80%;
 }
-
-@media (max-width: 1366px) {
-  .container {
-    height: 100% !important;
-  }
-}

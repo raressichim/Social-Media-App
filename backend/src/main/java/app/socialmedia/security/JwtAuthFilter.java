@@ -25,6 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         if (request.getRequestURI().equals("/api/users/register") || request.getRequestURI().equals("/api/auth/login") || request.getRequestURI().equals("/chat")) {
             filterChain.doFilter(request, response);
             return;
@@ -67,7 +68,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         String email = tokenService.getClaims(sessionToken).get("user_id").toString();
         UserDetails userDetails = userService.loadUserByUsername(email);
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
     }

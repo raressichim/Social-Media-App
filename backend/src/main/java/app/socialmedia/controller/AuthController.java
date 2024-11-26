@@ -1,6 +1,7 @@
 package app.socialmedia.controller;
 
 import app.socialmedia.dto.LoginRequestDto;
+import app.socialmedia.entity.User;
 import app.socialmedia.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -15,8 +16,8 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        authService.login(loginRequestDto, response);
+    public User login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+       return authService.login(loginRequestDto, response);
     }
 
     @PostMapping("/refresh")

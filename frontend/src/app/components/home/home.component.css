@@ -12,7 +12,6 @@
 .friendlist {
   height: 100%;
   background-color: #f0f0f0;
-  background-color: #f0f0f0;
 }
 
 .sidebar,
@@ -24,7 +23,6 @@
 .feed {
   flex-basis: 70%;
   flex-grow: 1;
-  flex-grow: 1;
   background-color: #ffffff;
 }
 
@@ -33,18 +31,6 @@
   .friendlist {
     flex-basis: 20%;
   }
-
-  .feed {
-    flex-basis: 60%;
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar,
-  .friendlist {
-    flex-basis: 20%;
-  }
-
   .feed {
     flex-basis: 60%;
   }

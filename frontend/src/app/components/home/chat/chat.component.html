@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="messages">
+    <div *ngFor="let message of messages">
+      <strong>{{ message.sender.firstName }}</strong
+      >: {{ message.content }}
+    </div>
+  </div>
+  <input type="text" [(ngModel)]="newMessage" placeholder="Type a message..." />
+  <button (click)="sendMessage()">Send</button>
+</div>

@@ -42,7 +42,7 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    protected Claims getClaims(String token) {
+    public Claims getClaims(String token) {
         try {
             return Jwts.parser().verifyWith(getJwtKey()).build().parseSignedClaims(token).getPayload();
         } catch (UnsupportedJwtException e) {
@@ -68,7 +68,7 @@ public class TokenService {
         return true;
     }
 
-    protected boolean validateSessionToken(String token) {
+    public boolean validateSessionToken(String token) {
         if (!validateToken(token)) {
             return false;
         }

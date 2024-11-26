@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from '../../interfaces/User';
 
 @Component({
   selector: 'app-signin',
@@ -14,12 +15,14 @@ import { Router } from '@angular/router';
 export class SigninComponent {
   email: string = '';
   password: string = '';
+  loggedUser: User = { id: 0, firstName: '', lastName: '', email: '' };
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log(`Login successful for ${this.email}`, response);
+        this.loggedUser = response;
         this.router.navigate(['/home']);
       },
       error: (error) => {
