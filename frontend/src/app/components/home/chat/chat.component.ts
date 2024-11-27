@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { WebSocketService } from '../../../services/websocket.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
@@ -7,6 +13,8 @@ import { User } from '../../../interfaces/User';
 import { AuthService } from '../../../services/auth.service';
 import { Friend } from '../../../interfaces/Friend';
 import { FriendselectionService } from '../../../services/friendselection.service';
+import { HttpClient } from '@angular/common/http';
+import { Message } from '../../../interfaces/message';
 
 @Component({
   selector: 'app-chat',
@@ -16,6 +24,8 @@ import { FriendselectionService } from '../../../services/friendselection.servic
   styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit {
+  @ViewChild('messageList') messageList!: ElementRef;
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
   messages: any[] = [];
   newMessage: string = '';
   loggedUser: User | null = null;
@@ -24,7 +34,9 @@ export class ChatComponent implements OnInit {
   constructor(
     private webSocketService: WebSocketService,
     private authService: AuthService,
-    private friendSelectionService: FriendselectionService
+    private friendSelectionService: FriendselectionService,
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +48,11 @@ export class ChatComponent implements OnInit {
     this.friendSelectionService.selectedFriend$.subscribe(
       (friend: Friend | null) => {
         this.selectedFriend = friend;
+        if (friend) {
+          this.fetchMessages(friend.friend.id);
+        } else {
+          this.messages = [];
+        }
       }
     );
 
@@ -47,13 +64,32 @@ export class ChatComponent implements OnInit {
             this.loggedUser.email,
             (message) => {
               this.messages.push(message);
-              console.log(this.messages);
+              this.scrollToBottom();
             }
           );
         }
         clearInterval(retryInterval);
       }
     }, 500);
+  }
+
+  fetchMessages(receiverId: number): void {
+    this.messages = [];
+    this.http
+      .get<Message[]>(`http://localhost:8080/api/messages/${receiverId}`, {
+        withCredentials: true,
+        observe: 'body',
+        responseType: 'json',
+      })
+      .subscribe({
+        next: (response) => {
+          this.messages = response;
+          this.scrollToBottom();
+        },
+        error: (err) => {
+          console.error('Error fetching messages:', err);
+        },
+      });
   }
 
   sendMessage() {
@@ -70,5 +106,26 @@ export class ChatComponent implements OnInit {
     this.webSocketService.sendMessage('/app/private-message', message);
     console.log(this.newMessage);
     this.newMessage = '';
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom() {
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      if (this.messageList) {
+        const element = this.messageList.nativeElement;
+        element.scrollTop = element.scrollHeight;
+        console.log(
+          'Scroll position:',
+          element.scrollTop,
+          element.scrollHeight
+        );
+      }
+    }, 0);
+  }
+
+  ngAfterViewInit() {
+    console.log('Message list element:', this.messageList);
+    this.scrollToBottom();
   }
 }

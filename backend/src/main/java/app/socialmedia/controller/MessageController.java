@@ -22,7 +22,7 @@ public class MessageController {
     private MessageService messageService;
 
     @GetMapping("/{receiverId}")
-    public List<MessageDTO> getMessages(@PathVariable Long receiverId, @AuthenticationPrincipal UserDetails user) {
+    public List<Message> getMessages(@PathVariable Long receiverId, @AuthenticationPrincipal UserDetails user) {
         return messageService.getMessages(receiverId, user);
     }
 

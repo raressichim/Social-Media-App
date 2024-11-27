@@ -1,10 +1,36 @@
-<div class="container">
-  <div class="messages">
-    <div *ngFor="let message of messages">
-      <strong>{{ message.sender.firstName }}</strong
-      >: {{ message.content }}
+<div class="container" #chatContainer>
+  <div class="top-container">
+    <h3>
+      {{ selectedFriend?.friend?.firstName }}
+      {{ selectedFriend?.friend?.lastName }}
+    </h3>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="bottom-container">
+    <div class="message-list" #messageList>
+      <div *ngFor="let message of messages">
+        <div
+          [ngClass]="{
+            'sent-message': message.sender.id === loggedUser?.id,
+            'received-message': message.sender.id !== loggedUser?.id
+          }"
+        >
+          <p>{{ message.content }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-input-container">
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        placeholder="Type a message..."
+        class="bottom-input"
+      />
+      <button (click)="sendMessage()">Send</button>
     </div>
   </div>
-  <input type="text" [(ngModel)]="newMessage" placeholder="Type a message..." />
-  <button (click)="sendMessage()">Send</button>
+</div>
+
+<div *ngIf="!selectedFriend" class="no-friend">
+  <p>Please select a friend to start chatting.</p>
 </div>

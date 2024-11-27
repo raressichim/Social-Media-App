@@ -32,17 +32,10 @@ public class MessageService {
         return modelMapper.map(message, MessageDTO.class);
     }
 
-    public List<MessageDTO> getMessages(Long receiverId, UserDetails userDetails) {
+    public List<Message> getMessages(Long receiverId, UserDetails userDetails) {
         User sender = userRepository.findByEmail(userDetails.getUsername());
         User receiver = userRepository.findById(receiverId).orElseThrow(UserNotFoundException::new);
-        List<Message> messagesReceived = messageRepository.findMessagesBySenderAndReceiver(sender, receiver, Sort.by(Sort.Direction.DESC, "id"));
-        log.info(messagesReceived.toString());
-        List<MessageDTO> messagesToReturn = new ArrayList<>();
-        for (Message message : messagesReceived) {
-            MessageDTO messageDTO = modelMapper.map(message, MessageDTO.class);
-            messagesToReturn.add(messageDTO);
-        }
-        log.info(messagesToReturn.toString());
-        return messagesToReturn;
+        List<Message> messagesReceived = messageRepository.findMessagesBetweenUsers(sender.getId(), receiver.getId(), Sort.by(Sort.Direction.ASC, "id"));
+        return messagesReceived;
     }
 }
