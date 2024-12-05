@@ -20,42 +20,41 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
 @Slf4j
 @AllArgsConstructor
 public class ChatController {
-
-    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     private final MessageRepository messageRepository;
-    @Autowired
+
     private UserRepository userRepository;
 
     @MessageMapping("/private-message")
     public Message sendMessage(MessageDTO message) {
-            log.info(message.toString());
-            User sender = userRepository.findById(message.getSenderId()).orElse(null);
-            User receiver = userRepository.findById(message.getReceiverId()).orElse(null);
+        log.info(message.toString());
+        User sender = userRepository.findById(message.getSenderId()).orElse(null);
+        User receiver = userRepository.findById(message.getReceiverId()).orElse(null);
 
-            Message tempMessage = new Message();
-            tempMessage.setSender(sender);
-            tempMessage.setReceiver(receiver);
-            tempMessage.setContent(message.getContent());
-            Message savedMessage = messageRepository.save(tempMessage);
+        Message tempMessage = new Message();
+        tempMessage.setSender(sender);
+        tempMessage.setReceiver(receiver);
+        tempMessage.setContent(message.getContent());
+        System.out.println(tempMessage);
+        tempMessage.setAttachment(Base64.getDecoder().decode(message.getAttachment()));
+        System.out.println(Arrays.toString(message.getAttachment()));
+        messageRepository.save(tempMessage);
 
-            Message responseMessage = new Message();
-            responseMessage.setSender(sender);
-            responseMessage.setReceiver(receiver);
-            responseMessage.setContent(message.getContent());
+        messagingTemplate.convertAndSendToUser(sender.getEmail(), "/queue/messages", tempMessage);
 
-            messagingTemplate.convertAndSendToUser(sender.getEmail(),"/queue/messages", responseMessage);
+        messagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", tempMessage);
 
-            messagingTemplate.convertAndSendToUser(receiver.getEmail(),"/queue/messages", responseMessage);
-
-            return responseMessage;
-        }
+        return tempMessage;
     }
+}
 

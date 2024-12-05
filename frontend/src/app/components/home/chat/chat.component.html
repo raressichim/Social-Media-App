@@ -27,6 +27,15 @@
         class="bottom-input"
       />
       <button (click)="sendMessage()">Send</button>
+      <button (click)="fileInput.click()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileSelected($event)"
+        style="display: none"
+      />
     </div>
   </div>
 </div>

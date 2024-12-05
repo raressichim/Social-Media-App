@@ -32,6 +32,9 @@ public class Message {
 
     private LocalDate messageDate = LocalDate.now();
 
+    @Lob
+    private byte[] attachment;
+
     public Message(String content, User receiver, User sender) {
         this.content = content;
         this.receiver = receiver;

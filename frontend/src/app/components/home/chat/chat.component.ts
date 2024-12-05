@@ -14,12 +14,13 @@ import { AuthService } from '../../../services/auth.service';
 import { Friend } from '../../../interfaces/Friend';
 import { FriendselectionService } from '../../../services/friendselection.service';
 import { HttpClient } from '@angular/common/http';
-import { Message } from '../../../interfaces/message';
+import { Message } from '../../../interfaces/Message';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [MatDividerModule, FormsModule, CommonModule],
+  imports: [MatDividerModule, FormsModule, CommonModule, MatIcon],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
@@ -30,6 +31,7 @@ export class ChatComponent implements OnInit {
   newMessage: string = '';
   loggedUser: User | null = null;
   selectedFriend: Friend | null = null;
+  attachment: string | null = null;
 
   constructor(
     private webSocketService: WebSocketService,
@@ -101,6 +103,7 @@ export class ChatComponent implements OnInit {
       senderId: this.loggedUser?.id,
       receiverId: this.selectedFriend.friend.id,
       content: this.newMessage,
+      attachment: this.attachment,
     };
     console.log('Sending message:', message);
     this.webSocketService.sendMessage('/app/private-message', message);
@@ -127,5 +130,20 @@ export class ChatComponent implements OnInit {
   ngAfterViewInit() {
     console.log('Message list element:', this.messageList);
     this.scrollToBottom();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64File = reader.result as string;
+        this.attachment = base64File.split(',')[1]; // Strip the Base64 prefix
+        console.log('Prepared attachment:', this.attachment);
+      };
+      reader.readAsDataURL(file);
+  }
   }
 }

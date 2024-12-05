@@ -33,13 +33,12 @@ export class WebSocketService {
       const destination = `/user/${email}/queue/messages`;
       console.log('Subscribing to destination:', destination);
       this.stompClient.subscribe(destination, (message: any) => {
-        console.log('TEST');
         const parsedMessage = JSON.parse(message.body);
         messageHandler(parsedMessage);
         console.log(parsedMessage);
       });
     } else {
-      console.warn('PULA EMAIL!');
+      console.warn('No email!');
     }
   }
 

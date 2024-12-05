@@ -10,7 +10,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/queue","/user");
+        config.enableSimpleBroker("/queue", "/user");
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -19,5 +19,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/chat").setAllowedOrigins("http://localhost:4200").withSockJS();
     }
 
-
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        registration.setMessageSizeLimit(10 * 1024 * 1024); // 10mb message limit
+        registration.setSendBufferSizeLimit(20* 1024 * 1024); // 20MB buffer limit
+    }
 }
