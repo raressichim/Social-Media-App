@@ -18,10 +18,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat").setAllowedOrigins("http://localhost:4200").withSockJS();
     }
-
-    @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setMessageSizeLimit(10 * 1024 * 1024); // 10mb message limit
-        registration.setSendBufferSizeLimit(20* 1024 * 1024); // 20MB buffer limit
-    }
 }

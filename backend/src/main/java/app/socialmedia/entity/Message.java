@@ -2,10 +2,7 @@ package app.socialmedia.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -35,9 +32,9 @@ public class Message {
     @Lob
     private byte[] attachment;
 
-    public Message(String content, User receiver, User sender) {
-        this.content = content;
+    public Message(User sender,User receiver,String content) {
         this.receiver = receiver;
         this.sender = sender;
+        this.content = content;
     }
 }

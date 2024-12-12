@@ -45,6 +45,6 @@ public class User {
 
     @JsonCreator
     public User(String username) {
-        this.firstName = username; // or any suitable field
+        this.firstName = username;
     }
 }

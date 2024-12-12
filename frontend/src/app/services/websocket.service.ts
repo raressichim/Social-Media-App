@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Stomp } from '@stomp/stompjs';
+import {Message, Stomp} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +41,14 @@ export class WebSocketService {
     } else {
       console.warn('No email!');
     }
+  }
+
+  subscribeToUserQueue(queueName: string): Observable<any> {
+    return new Observable(observer => {
+      this.stompClient.subscribe(queueName, (message: Message) => {
+        observer.next(JSON.parse(message.body));
+      });
+    });
   }
 
   disconnect() {

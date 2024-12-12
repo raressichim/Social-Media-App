@@ -13,7 +13,7 @@ import { User } from '../../../interfaces/User';
 import { AuthService } from '../../../services/auth.service';
 import { Friend } from '../../../interfaces/Friend';
 import { FriendselectionService } from '../../../services/friendselection.service';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Message } from '../../../interfaces/Message';
 import {MatIcon} from '@angular/material/icon';
 
@@ -31,7 +31,7 @@ export class ChatComponent implements OnInit {
   newMessage: string = '';
   loggedUser: User | null = null;
   selectedFriend: Friend | null = null;
-  attachment: string | null = null;
+  attachment: File | null = null;
 
   constructor(
     private webSocketService: WebSocketService,
@@ -99,18 +99,36 @@ export class ChatComponent implements OnInit {
       console.warn('No friend selected!');
       return;
     }
+
     const message = {
       senderId: this.loggedUser?.id,
       receiverId: this.selectedFriend.friend.id,
       content: this.newMessage,
-      attachment: this.attachment,
     };
     console.log('Sending message:', message);
+
     this.webSocketService.sendMessage('/app/private-message', message);
     console.log(this.newMessage);
+
+    this.webSocketService.subscribeToUserQueue(`/user/${this.loggedUser?.email}/queue/replies`).subscribe(response => {
+      console.log('Message saved with ID:', response.id);
+
+      if (this.attachment) {
+        const formData = new FormData();
+        formData.append('id', response.id);
+        formData.append('attachment', this.attachment);
+
+        this.http.post('http://localhost:8080/api/messages/attachments', formData, { withCredentials: true })
+          .subscribe(() => {
+            console.log('File uploaded successfully');
+          });
+      }
+    });
+
     this.newMessage = '';
-    this.scrollToBottom();
+    this.scrollToBottom();  
   }
+
 
   private scrollToBottom() {
     this.cdr.detectChanges();
@@ -135,15 +153,8 @@ export class ChatComponent implements OnInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
+      this.attachment = input.files[0];
 
-      reader.onload = () => {
-        const base64File = reader.result as string;
-        this.attachment = base64File.split(',')[1]; // Strip the Base64 prefix
-        console.log('Prepared attachment:', this.attachment);
-      };
-      reader.readAsDataURL(file);
   }
   }
 }

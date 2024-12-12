@@ -9,13 +9,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findMessagesBySenderAndReceiverId(User user, Long receiverId);
-
-    List<Message> findMessagesBySenderAndReceiver(User sender, User receiver, Sort ASC);
-
     @Query("SELECT m FROM Message m WHERE " +
             "(m.sender.id = :senderId AND m.receiver.id = :receiverId) OR " +
             "(m.sender.id = :receiverId AND m.receiver.id = :senderId)")
@@ -23,5 +20,4 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             @Param("senderId") Long senderId,
             @Param("receiverId") Long receiverId,
             Sort ASC);
-
 }
