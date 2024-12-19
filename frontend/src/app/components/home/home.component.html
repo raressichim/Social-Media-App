@@ -1,6 +1,8 @@
 <div class="container">
   <app-sidebar class="sidebar"></app-sidebar>
-  <app-feed class="feed"></app-feed>
+  <!-- <app-feed class="feed"></app-feed> -->
+  <div class="feed"><router-outlet></router-outlet></div>
+
   <app-chat *ngIf="selectedFriend"></app-chat>
   <app-friend-list class="friendlist"></app-friend-list>
 </div>

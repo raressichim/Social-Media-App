@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { FeedComponent } from './components/home/feed/feed.component';
+import { ProfileComponent } from './components/home/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -27,5 +29,10 @@ export const routes: Routes = [
         (m) => m.HomeComponent
       );
     },
+    children: [
+      { path: '', redirectTo: 'feed', pathMatch: 'full' },
+      { path: 'feed', component: FeedComponent },
+      { path: 'profile', component: ProfileComponent },
+    ],
   },
 ];

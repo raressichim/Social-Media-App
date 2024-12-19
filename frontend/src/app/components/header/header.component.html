@@ -58,31 +58,35 @@
     </li>
     <li>
       <div class="search-component">
-        <mat-form-field class="search-bar" appearance="outline">
+        <mat-form-field
+          class="search-bar custom-placeholder"
+          style="margin-bottom: -1.25em"
+          appearance="outline"
+        >
           <input
             type="tel"
             matInput
             placeholder="Search"
             name="search"
+            style="color: white"
             [(ngModel)]="search"
             #filter
             (keyup)="filterResults(filter.value)"
           />
           <button matSuffix mat-button (click)="filterResults(filter.value)">
-            <mat-icon>search</mat-icon>
+            <mat-icon class="search-icon">search</mat-icon>
           </button>
         </mat-form-field>
-        <!-- <mat-nav-list class="search-suggestions">
-          @for (user of filteredUsers; track user) {
-          <mat-list-item class="suggestion-item">
+        <mat-nav-list
+          class="search-suggestions"
+          *ngIf="filteredUsers && filteredUsers.length > 0"
+        >
+          <mat-list-item
+            *ngFor="let user of filteredUsers; trackBy: trackByUser"
+          >
             <h4 mat-line>{{ user.firstName }} {{ user.lastName }}</h4>
-            @if (!$last) {
-            <mat-divider [inset]="true"></mat-divider>
-            }
           </mat-list-item>
-          }
-          <mat-divider></mat-divider>
-        </mat-nav-list> -->
+        </mat-nav-list>
       </div>
     </li>
   </ul>

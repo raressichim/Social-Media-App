@@ -21,6 +21,7 @@
 }
 
 .feed {
+  margin-top: 1%;
   flex-basis: 70%;
   flex-grow: 1;
   background-color: #ffffff;

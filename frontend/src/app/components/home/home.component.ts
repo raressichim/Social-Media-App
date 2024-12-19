@@ -7,6 +7,7 @@ import { MatCommonModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { Friend } from '../../interfaces/Friend';
 import { FriendselectionService } from '../../services/friendselection.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,7 @@ import { FriendselectionService } from '../../services/friendselection.service';
     FriendListComponent,
     ChatComponent,
     CommonModule,
+    RouterOutlet,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

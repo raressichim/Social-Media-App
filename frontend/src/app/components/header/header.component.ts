@@ -14,6 +14,7 @@ import {
   MatNavList,
 } from '@angular/material/list';
 import { MatDivider } from '@angular/material/divider';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -32,6 +33,7 @@ import { MatDivider } from '@angular/material/divider';
     MatDivider,
     MatListSubheaderCssMatStyler,
     MatNavList,
+    CommonModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -43,6 +45,10 @@ export class HeaderComponent {
 
   constructor(private userService: UserService) {
     this.filteredUsers = this.allUsers;
+  }
+
+  trackByUser(index: number, user: any): number {
+    return user.id;
   }
 
   ngOnInit(): void {
