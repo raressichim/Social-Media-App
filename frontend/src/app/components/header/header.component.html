@@ -1,6 +1,4 @@
 <nav>
-  <!-- <img src="" alt="" /> -->
-
   <ul class="tabs">
     <li>
       <a routerLink="/">
@@ -27,6 +25,7 @@
         viewBox="0 0 89 88"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        (click)="goToProfile()"
       >
         <path
           d="M45.1596 43.62C45.1296 43.62 45.1096 43.62 45.0796 43.62C45.0296 43.61 44.9596 43.61 44.8996 43.62C41.9996 43.53 39.8096 41.25 39.8096 38.44C39.8096 35.58 42.1396 33.25 44.9996 33.25C47.8596 33.25 50.1896 35.58 50.1896 38.44C50.1796 41.25 47.9796 43.53 45.1896 43.62C45.1796 43.62 45.1696 43.62 45.1596 43.62ZM44.9996 34.75C42.9696 34.75 41.3096 36.41 41.3096 38.44C41.3096 40.44 42.8696 42.05 44.8596 42.12C44.9096 42.11 45.0496 42.11 45.1796 42.12C47.1396 42.03 48.6796 40.42 48.6896 38.44C48.6896 36.41 47.0296 34.75 44.9996 34.75Z"
@@ -45,6 +44,7 @@
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         class="logo"
+        (click)="toggleSearch()"
       >
         <path
           d="M44.5 53.75C38.85 53.75 34.25 49.15 34.25 43.5C34.25 37.85 38.85 33.25 44.5 33.25C50.15 33.25 54.75 37.85 54.75 43.5C54.75 49.15 50.15 53.75 44.5 53.75ZM44.5 34.75C39.67 34.75 35.75 38.68 35.75 43.5C35.75 48.32 39.67 52.25 44.5 52.25C49.33 52.25 53.25 48.32 53.25 43.5C53.25 38.68 49.33 34.75 44.5 34.75Z"
@@ -56,38 +56,37 @@
         />
       </svg>
     </li>
-    <li>
-      <div class="search-component">
-        <mat-form-field
-          class="search-bar custom-placeholder"
-          style="margin-bottom: -1.25em"
-          appearance="outline"
+    <div class="search-component" *ngIf="showSearch">
+      <mat-form-field
+        class="search-bar custom-placeholder"
+        style="margin-bottom: -1.25em"
+        appearance="outline"
+      >
+        <input
+          type="tel"
+          matInput
+          placeholder="Search"
+          name="search"
+          style="color: white"
+          [(ngModel)]="search"
+          #filter
+          (keyup)="filterResults(filter.value)"
+        />
+        <button matSuffix mat-button (click)="filterResults(filter.value)">
+          <mat-icon class="search-icon">search</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-nav-list
+        class="search-suggestions"
+        *ngIf="filteredUsers && filteredUsers.length > 0"
+      >
+        <mat-list-item
+          *ngFor="let user of filteredUsers; trackBy: trackByUser"
+          (click)="goToUserProfile(user.id)"
         >
-          <input
-            type="tel"
-            matInput
-            placeholder="Search"
-            name="search"
-            style="color: white"
-            [(ngModel)]="search"
-            #filter
-            (keyup)="filterResults(filter.value)"
-          />
-          <button matSuffix mat-button (click)="filterResults(filter.value)">
-            <mat-icon class="search-icon">search</mat-icon>
-          </button>
-        </mat-form-field>
-        <mat-nav-list
-          class="search-suggestions"
-          *ngIf="filteredUsers && filteredUsers.length > 0"
-        >
-          <mat-list-item
-            *ngFor="let user of filteredUsers; trackBy: trackByUser"
-          >
-            <h4 mat-line>{{ user.firstName }} {{ user.lastName }}</h4>
-          </mat-list-item>
-        </mat-nav-list>
-      </div>
-    </li>
+          <h4 mat-line>{{ user.firstName }} {{ user.lastName }}</h4>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
   </ul>
 </nav>

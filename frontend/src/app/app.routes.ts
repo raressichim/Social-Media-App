@@ -14,6 +14,7 @@ export const routes: Routes = [
       );
     },
   },
+  { path: 'home/profile/:userId', component: ProfileComponent },
   {
     path: 'signup',
     loadComponent: () => {

@@ -2,8 +2,12 @@
   <div class="top-container">
     <img src="profile-pic.png" alt="" class="profile-photo" />
   </div>
-  <p>posts</p>
-  <mat-divider></mat-divider>
-
-  <div class="posts"></div>
+  <h2 class="post-header">Posts</h2>
+  <div class="posts">
+    <div *ngFor="let post of posts" class="post">
+      <p>
+        {{ post.body }}
+      </p>
+    </div>
+  </div>
 </div>

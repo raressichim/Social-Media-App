@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,8 @@ import {
 } from '@angular/material/list';
 import { MatDivider } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { UserIdServiceService } from '../../services/userId.service';
 
 @Component({
   selector: 'app-header',
@@ -42,8 +44,16 @@ export class HeaderComponent {
   search: String = '';
   filteredUsers: User[] = [];
   allUsers: User[] = [];
+  userId: number | null = null;
+  loggedUser: User | null = null;
+  showSearch: boolean = false;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private authService: AuthService,
+    private userIdService: UserIdServiceService
+  ) {
     this.filteredUsers = this.allUsers;
   }
 
@@ -52,6 +62,11 @@ export class HeaderComponent {
   }
 
   ngOnInit(): void {
+    this.authService.loggedUser$.subscribe((user: User | null) => {
+      this.loggedUser = user;
+      this.userId = this.loggedUser?.id ?? null;
+    });
+
     this.userService.getUsers().subscribe({
       next: (users) => {
         this.allUsers = users;
@@ -61,6 +76,20 @@ export class HeaderComponent {
       },
     });
     console.log(this.allUsers);
+  }
+
+  goToProfile() {
+    if (this.userId !== null) {
+      this.userIdService.setUserId(this.userId);
+      this.router.navigate(['/home/profile']);
+    } else {
+      console.error('User ID is null');
+    }
+  }
+
+  goToUserProfile(userId: number) {
+    this.userIdService.setUserId(userId);
+    this.router.navigate(['/home/profile']);
   }
 
   filterResults(text: string) {
@@ -77,5 +106,9 @@ export class HeaderComponent {
         .includes(text.toLowerCase())
     );
     console.log(this.filteredUsers);
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
   }
 }

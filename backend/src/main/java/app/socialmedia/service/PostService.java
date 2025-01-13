@@ -45,4 +45,8 @@ public class PostService {
         List<Post> friendsPosts = postRepository.findPostsByFriendsAndUser(friendIds,tempUser.getId() ,Sort.by(Sort.Direction.DESC, "id"));
         return friendsPosts;
     }
+
+    public List<Post> getPostsForUser(Long userId) {
+        return postRepository.findPostsByUserId(userId);
+    }
 }

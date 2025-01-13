@@ -28,4 +28,9 @@ public class PostController {
         return ResponseEntity.ok(postService.addPost(userDetails,postRequest));
     }
 
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Post>> getPost(@PathVariable Long userId){
+        return ResponseEntity.ok(postService.getPostsForUser(userId));
+    }
 }

@@ -38,4 +38,12 @@ export class PostService {
       })
       .pipe(tap((posts) => this.postsSubject.next(posts)));
   }
+
+  getPostsForUser(userId: number): Observable<any> {
+    return this.http
+      .get<Post[]>(`http://localhost:8080/api/posts/${userId}`, {
+        withCredentials: true,
+      })
+      .pipe(tap((posts) => this.postsSubject.next(posts)));
+  }
 }
