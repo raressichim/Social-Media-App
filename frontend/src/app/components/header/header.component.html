@@ -56,9 +56,9 @@
         />
       </svg>
     </li>
-    <div class="search-component" *ngIf="showSearch">
+    <div class="search-component" *ngIf="showSearch" [@fadeInOut]>
       <mat-form-field
-        class="search-bar custom-placeholder"
+        class="search-bar"
         style="margin-bottom: -1.25em"
         appearance="outline"
       >
@@ -71,6 +71,7 @@
           [(ngModel)]="search"
           #filter
           (keyup)="filterResults(filter.value)"
+          autocomplete="off"
         />
         <button matSuffix mat-button (click)="filterResults(filter.value)">
           <mat-icon class="search-icon">search</mat-icon>

@@ -21,6 +21,11 @@ public class UserController {
         return userService.findAllUsers();
     }
 
+    @GetMapping("/{userId}")
+    public UserResponseDto getUser(@PathVariable Long userId){
+        return userService.findUserById(userId);
+    }
+
     @PostMapping("/register")
     public UserResponseDto addUser(@RequestBody UserRequestDto userDto){
         log.info(userDto.toString());

@@ -17,6 +17,13 @@ import { MatDivider } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { UserIdServiceService } from '../../services/userId.service';
+import {
+  trigger,
+  animate,
+  state,
+  style,
+  transition,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-header',
@@ -39,6 +46,18 @@ import { UserIdServiceService } from '../../services/userId.service';
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
+  animations: [
+    trigger('fadeInOut', [
+      state(
+        'void',
+        style({
+          opacity: 0,
+        })
+      ),
+
+      transition('void <=> *', [animate(200)]),
+    ]),
+  ],
 })
 export class HeaderComponent {
   search: String = '';

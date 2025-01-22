@@ -24,7 +24,7 @@ ul {
   justify-content: space-evenly;
   align-items: center;
   margin: 0.5% auto;
-  height: auto;
+  height: 50px;
   width: 30%;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -71,4 +71,16 @@ svg path {
 .search-component input::placeholder {
   color: white;
   opacity: 1;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__leading {
+  border-color: transparent !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__notch {
+  border-color: transparent !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: transparent !important;
 }

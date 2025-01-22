@@ -1,9 +1,7 @@
 package app.socialmedia.service;
 
-import app.socialmedia.dto.FriendRequestDto;
 import app.socialmedia.dto.UserRequestDto;
 import app.socialmedia.dto.UserResponseDto;
-import app.socialmedia.entity.Friendship;
 import app.socialmedia.entity.User;
 import app.socialmedia.exception.user.EmailAlreadyExistsException;
 import app.socialmedia.exception.user.InvalidEmailException;
@@ -69,4 +67,9 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public UserResponseDto findUserById(Long userId) {
+        UserResponseDto user = new UserResponseDto();
+        User tempUser = userRepository.findById(userId).orElse(null);
+        return modelMapper.map(tempUser, UserResponseDto.class);
+    }
 }

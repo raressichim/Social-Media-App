@@ -16,3 +16,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.mdc-text-field--outlined .mdc-notched-notch {
+  border-color: red;
+}
