@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Stomp } from '@stomp/stompjs';
+import { Message, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 @Injectable({
@@ -29,13 +29,12 @@ export class WebSocketService {
     messageHandler: (message: any) => void
   ) {
     if (email) {
-      console.log('USER EMAIL' + email);
       const destination = `/user/${email}/queue/messages`;
-      console.log('Subscribing to destination:', destination);
-      this.stompClient.subscribe(destination, (message: any) => {
+      this.stompClient.subscribe(destination, (message: Message) => {
         const parsedMessage = JSON.parse(message.body);
+        console.log('Message' + message.body);
         messageHandler(parsedMessage);
-        console.log(parsedMessage);
+        console.log('Received message: ', parsedMessage);
       });
     } else {
       console.warn('No email!');

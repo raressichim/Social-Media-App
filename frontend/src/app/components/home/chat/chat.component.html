@@ -15,7 +15,12 @@
             'received-message': message.sender.id !== loggedUser?.id
           }"
         >
-          <p>{{ message.content }}</p>
+          <p *ngIf="message.type !== 'FILE'">{{ message.content }}</p>
+          <img
+            *ngIf="message.type === 'FILE' && isImageFile(message.fileUrl)"
+            [src]="message.fileUrl"
+            alt="Sent Image"
+          />
         </div>
       </div>
     </div>
@@ -31,9 +36,9 @@
         <mat-icon>add</mat-icon>
       </button>
       <input
-        #fileInput
         type="file"
-        (change)="onFileSelected($event)"
+        #fileInput
+        (change)="sendFile($event)"
         style="display: none"
       />
     </div>

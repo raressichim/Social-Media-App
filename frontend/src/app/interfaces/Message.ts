@@ -5,4 +5,6 @@ export interface Message {
   sender: User;
   receiver: User;
   attachment: string;
+  type: string;
+  fileUrl: string;
 }

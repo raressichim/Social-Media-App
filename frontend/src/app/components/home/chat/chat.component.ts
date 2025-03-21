@@ -15,7 +15,8 @@ import { Friend } from '../../../interfaces/Friend';
 import { FriendselectionService } from '../../../services/friendselection.service';
 import { HttpClient } from '@angular/common/http';
 import { Message } from '../../../interfaces/Message';
-import {MatIcon} from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -32,6 +33,7 @@ export class ChatComponent implements OnInit {
   loggedUser: User | null = null;
   selectedFriend: Friend | null = null;
   attachment: string | null = null;
+  fileName = '';
 
   constructor(
     private webSocketService: WebSocketService,
@@ -75,6 +77,10 @@ export class ChatComponent implements OnInit {
     }, 500);
   }
 
+  isImageFile(fileName: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(fileName);
+  }
+
   fetchMessages(receiverId: number): void {
     this.messages = [];
     this.http
@@ -103,13 +109,53 @@ export class ChatComponent implements OnInit {
       senderId: this.loggedUser?.id,
       receiverId: this.selectedFriend.friend.id,
       content: this.newMessage,
-      attachment: this.attachment,
+      type: 'TEXT',
     };
     console.log('Sending message:', message);
     this.webSocketService.sendMessage('/app/private-message', message);
     console.log(this.newMessage);
     this.newMessage = '';
     this.scrollToBottom();
+  }
+
+  sendFile(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+    if (!this.selectedFriend || !this.loggedUser) {
+      console.warn('No friend selected or user not logged in.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.http
+      .post<{ fileUrl: string }>(
+        'http://localhost:8080/api/files/upload',
+        formData,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe({
+        next: (response) => {
+          const message = {
+            senderId: this.loggedUser!.id,
+            receiverId: this.selectedFriend!.friend.id,
+            content: '',
+            type: 'FILE',
+            fileName: file.name,
+            fileUrl: response.fileUrl,
+          };
+          console.log('FileUrl:' + response.fileUrl);
+          console.log('Sending file message:', message);
+          this.webSocketService.sendMessage('/app/private-message', message);
+        },
+        error: (err) => {
+          console.error('File upload error:', err);
+        },
+      });
   }
 
   private scrollToBottom() {
@@ -130,20 +176,5 @@ export class ChatComponent implements OnInit {
   ngAfterViewInit() {
     console.log('Message list element:', this.messageList);
     this.scrollToBottom();
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const base64File = reader.result as string;
-        this.attachment = base64File.split(',')[1]; // Strip the Base64 prefix
-        console.log('Prepared attachment:', this.attachment);
-      };
-      reader.readAsDataURL(file);
-  }
   }
 }

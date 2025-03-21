@@ -19,7 +19,6 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Message content must not be blank")
     private String content;
 
     @ManyToOne
@@ -32,8 +31,9 @@ public class Message {
 
     private LocalDate messageDate = LocalDate.now();
 
-    @Lob
-    private byte[] attachment;
+    private String fileUrl;
+
+    private String type;
 
     public Message(String content, User receiver, User sender) {
         this.content = content;
