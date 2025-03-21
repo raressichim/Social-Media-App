@@ -16,6 +16,5 @@ public class MessageDTO {
     private String content;
     private String type;
     private String fileName;
-    private String fileData;
     private String fileUrl;
 }

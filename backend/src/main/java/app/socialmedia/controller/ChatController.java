@@ -67,7 +67,6 @@ public class ChatController {
         }
 
         messageRepository.save(tempMessage);
-        System.out.println(tempMessage.getFileUrl());
 
         messagingTemplate.convertAndSendToUser(sender.getEmail(), "/queue/messages", tempMessage);
         messagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", tempMessage);
