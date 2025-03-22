@@ -60,9 +60,10 @@ public class ChatController {
             }
             String fileName = message.getFileName();
 
-            String fileUrl = "http://localhost:8080/uploads/" + fileName;
+            String fileUrl = "http://localhost:8080/api/files/uploads/" + fileName;
             System.out.println(fileUrl);
             tempMessage.setFileUrl(fileUrl);
+            tempMessage.setFileName(fileName);
 
         }
 

@@ -31,7 +31,7 @@ public class SecurityConfig  {
         return httpSecurity
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/auth/login","/api/users/register","/chat/**","/api/files/upload","/uploads/**")
+                                .requestMatchers("/api/auth/login","/api/users/register","/chat/**","/api/files/upload","/uploads/**","/api/files/download/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

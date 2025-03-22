@@ -13,10 +13,12 @@ import { User } from '../../../interfaces/User';
 import { AuthService } from '../../../services/auth.service';
 import { Friend } from '../../../interfaces/Friend';
 import { FriendselectionService } from '../../../services/friendselection.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Message } from '../../../interfaces/Message';
 import { MatIcon } from '@angular/material/icon';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-chat',
@@ -40,7 +42,8 @@ export class ChatComponent implements OnInit {
     private authService: AuthService,
     private friendSelectionService: FriendselectionService,
     private cdr: ChangeDetectorRef,
-    private http: HttpClient
+    private http: HttpClient,
+    private fileService: FileService
   ) {}
 
   ngOnInit(): void {
@@ -149,7 +152,7 @@ export class ChatComponent implements OnInit {
             fileUrl: response.fileUrl,
           };
           console.log('FileUrl:' + response.fileUrl);
-          console.log('Sending file message:', message);
+          console.log('Sending file message:', message.fileName);
           this.webSocketService.sendMessage('/app/private-message', message);
         },
         error: (err) => {
@@ -171,6 +174,11 @@ export class ChatComponent implements OnInit {
         );
       }
     }, 0);
+  }
+
+  downloadFile(fileName: string) {
+    console.log(fileName);
+    this.fileService.download(fileName).subscribe();
   }
 
   ngAfterViewInit() {

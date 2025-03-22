@@ -35,6 +35,8 @@ public class Message {
 
     private String type;
 
+    private String fileName;
+
     public Message(String content, User receiver, User sender) {
         this.content = content;
         this.receiver = receiver;

@@ -2,32 +2,89 @@ package app.socialmedia.controller;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
+import static java.nio.file.Paths.get;
+
+@RequestMapping("/api/files")
 @RestController
-@RequestMapping("/uploads")
 public class FileController {
-    private final Path uploadDir = Paths.get("uploads");
+
+    private final String uploadDirectory = "uploads";
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+
+            File dir = new File(uploadDirectory);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            
+            String fileName = file.getOriginalFilename();
+            Path filePath = get(uploadDirectory, fileName);
+            Files.write(filePath, file.getBytes());
 
 
+            return ResponseEntity.ok(new FileUploadResponse("/" + uploadDirectory + "/" + fileName));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed", e);
+        }
+    }
 
-    @GetMapping("/{filename:.+}")
+    @GetMapping("/uploads/{filename:.+}")
     public Resource getFile(@PathVariable String filename) throws Exception{
 
-        Path filePath = uploadDir.resolve(filename).normalize();
+        Path filePath = get("uploads").resolve(filename).normalize();
 
         if (!Files.exists(filePath)) {
             throw new FileNotFoundException("File not found: " + filePath.toAbsolutePath());
         }
 
         return new UrlResource(filePath.toUri());
+    }
+
+    @GetMapping("/download/{filename}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Resource> downloadFiles(@PathVariable("filename") String filename) throws IOException {
+        Path filePath = get(uploadDirectory).toAbsolutePath().normalize().resolve(filename);
+        System.out.println("Path: " + filePath);
+        if(!Files.exists(filePath)) {
+            throw new FileNotFoundException("File not found: " + filename);
+        }
+        Resource resource = new UrlResource(filePath.toUri());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("File-Name", filename);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;File-Name="+ filename);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath))).headers(headers).body(resource);
+    }
+
+    static class FileUploadResponse {
+        private String fileUrl;
+
+        public FileUploadResponse(String fileUrl) {
+            this.fileUrl = fileUrl;
+        }
+
+        public String getFileUrl() {
+            return fileUrl;
+        }
+
+        public void setFileUrl(String fileUrl) {
+            this.fileUrl = fileUrl;
+        }
     }
 }

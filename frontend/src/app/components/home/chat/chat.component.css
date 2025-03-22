@@ -73,6 +73,12 @@ p {
   word-wrap: break-word;
 }
 
+.sent-message p a,
+.received-message p a {
+  color: white;
+  text-decoration: none;
+}
+
 .sent-message img {
   width: 100px;
   display: flex;

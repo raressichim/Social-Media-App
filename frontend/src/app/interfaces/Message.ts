@@ -7,4 +7,5 @@ export interface Message {
   attachment: string;
   type: string;
   fileUrl: string;
+  fileName: string;
 }
