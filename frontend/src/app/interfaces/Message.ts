@@ -8,4 +8,6 @@ export interface Message {
   type: string;
   fileUrl: string;
   fileName: string;
+  marker: {};
+  center: {};
 }

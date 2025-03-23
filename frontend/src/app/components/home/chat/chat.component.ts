@@ -16,14 +16,21 @@ import { FriendselectionService } from '../../../services/friendselection.servic
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Message } from '../../../interfaces/Message';
 import { MatIcon } from '@angular/material/icon';
-import { map, Observable } from 'rxjs';
+import { map, max, Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { FileService } from '../../../services/file.service';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [MatDividerModule, FormsModule, CommonModule, MatIcon],
+  imports: [
+    MatDividerModule,
+    FormsModule,
+    CommonModule,
+    MatIcon,
+    GoogleMapsModule,
+  ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
@@ -36,6 +43,14 @@ export class ChatComponent implements OnInit {
   selectedFriend: Friend | null = null;
   attachment: string | null = null;
   fileName = '';
+  zoom = 15;
+  lattitude = 0;
+  longitude = 0;
+
+  center: google.maps.LatLngLiteral = {
+    lat: this.lattitude,
+    lng: this.longitude,
+  };
 
   constructor(
     private webSocketService: WebSocketService,
@@ -179,6 +194,36 @@ export class ChatComponent implements OnInit {
   downloadFile(fileName: string) {
     console.log(fileName);
     this.fileService.download(fileName).subscribe();
+  }
+
+  sendLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const locationMessage = {
+          senderId: this.loggedUser!.id,
+          receiverId: this.selectedFriend!.friend.id,
+          content: ``,
+          type: 'LOCATION',
+          marker: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+          center: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        };
+        this.webSocketService.sendMessage(
+          '/app/private-message',
+          locationMessage
+        ),
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          };
+      });
+    }
   }
 
   ngAfterViewInit() {

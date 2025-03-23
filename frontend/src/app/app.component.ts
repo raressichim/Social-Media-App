@@ -4,6 +4,7 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
+import { environment } from './environments/environemnt';
 
 @Component({
   selector: 'app-root',
@@ -20,4 +21,16 @@ import { HeaderComponent } from './components/header/header.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {}
+export class AppComponent {
+  ngOnInit() {
+    this.loadGoogleMaps();
+  }
+
+  loadGoogleMaps() {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apiKey}`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+}
