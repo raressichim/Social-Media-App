@@ -10,7 +10,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  right: 15.5%;
+  right: 16.7%;
   z-index: 1;
 }
 
@@ -30,6 +30,7 @@
   height: 15%;
   padding-left: 5%;
   width: 100%;
+  margin: 0;
 }
 
 .bottom-container {
@@ -80,7 +81,7 @@ p {
 }
 
 .sent-message img {
-  width: 100px;
+  width: 50%;
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -103,7 +104,7 @@ p {
   width: fit-content;
   padding: 10px;
   border-radius: 15%;
-  width: 100px;
+  width: 50%;
   margin-left: -3%;
 }
 .received-message google-map {
@@ -133,12 +134,12 @@ p {
   height: 100%;
 }
 
-.bottom-input-container {
+/* .bottom-input-container {
   display: flex;
   width: 100%;
   gap: 5px;
   box-sizing: border-box;
-}
+} */
 
 .bottom-input {
   margin-left: 2%;
@@ -151,18 +152,15 @@ p {
   min-width: 0;
 }
 
-.bottom-input-container button {
-  padding: 10px 15px;
-  background-color: #f8a862;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-}
-
 .bottom-input-container button:hover {
   background-color: #e89557;
+}
+
+.btn-primary {
+  background-color: #f8a862;
+}
+
+.btn:focus,
+.btn:active {
+  border: none !important;
 }

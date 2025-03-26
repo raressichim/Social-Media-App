@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Friend } from '../../../interfaces/Friend';
+import { Friendship } from '../../../interfaces/FriendShip';
 import { FriendService } from '../../../services/friend.service';
 import { FriendselectionService } from '../../../services/friendselection.service';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './friend-list.component.css',
 })
 export class FriendListComponent {
-  friends: Friend[] = [];
+  friends: Friendship[] = [];
 
   constructor(
     private friendService: FriendService,
@@ -20,21 +20,17 @@ export class FriendListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.friendService.getFriends().subscribe({
-      next: (friends) => {
-        this.friends = friends;
-      },
-      error: (err) => {
-        console.error('Error fetching friends:', err);
-      },
+    this.friendService.getFriends();
+    this.friendService.friends$.subscribe((friends) => {
+      this.friends = friends;
     });
   }
 
-  selectFriend(friend: Friend): void {
+  selectFriend(friend: Friendship): void {
     this.friendSelectionService.selectFriend(friend);
   }
 
-  trackById(index: number, friend: Friend): number {
+  trackById(index: number, friend: Friendship): number {
     return friend.friend.id;
   }
 }

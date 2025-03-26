@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class FriendRequestDto {
     private String email;
+    private Long userId;
 }

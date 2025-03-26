@@ -36,7 +36,7 @@ public class User {
     private byte[] picture;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<Friendship> friendships;
 
     @JsonIgnore
@@ -45,6 +45,6 @@ public class User {
 
     @JsonCreator
     public User(String username) {
-        this.firstName = username; // or any suitable field
+        this.firstName = username;
     }
 }

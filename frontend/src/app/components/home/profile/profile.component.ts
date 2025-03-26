@@ -9,6 +9,7 @@ import { UserIdServiceService } from '../../../services/userId.service';
 import { UserService } from '../../../services/user.service';
 import { formatDistanceToNow } from 'date-fns';
 import { Post } from '../../../interfaces/Post';
+import { FriendService } from '../../../services/friend.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,14 +22,20 @@ export class ProfileComponent {
   posts: Post[] = [];
   userId: number | null = null;
   user: User | null = null;
+  loggedUser: User | null = null;
 
   constructor(
     private postService: PostService,
     private userIdService: UserIdServiceService,
-    private userService: UserService
+    private userService: UserService,
+    private friendService: FriendService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.loggedUser$.subscribe((logged: User | null) => {
+      this.loggedUser = logged;
+    });
     this.userIdService.userId$.subscribe((userId) => {
       this.userId = userId;
       if (this.userId !== null) {
@@ -52,5 +59,19 @@ export class ProfileComponent {
         console.error('User ID is null');
       }
     });
+  }
+
+  requestFriend(): void {
+    this.friendService.requestFriend(this.userId).subscribe((response) => {
+      console.log(response);
+    });
+  }
+
+  areAlreadyFriends(): boolean {
+    return this.friendService.areAlreadyFriends(this.userId);
+  }
+
+  checkFriends() {
+    console.log(this.areAlreadyFriends());
   }
 }

@@ -1,5 +1,6 @@
 import { User } from './User';
 
-export interface Friend {
+export interface Friendship {
+  user: User;
   friend: User;
 }

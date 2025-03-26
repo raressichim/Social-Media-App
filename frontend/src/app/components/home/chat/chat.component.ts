@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../interfaces/User';
 import { AuthService } from '../../../services/auth.service';
-import { Friend } from '../../../interfaces/Friend';
+import { Friendship } from '../../../interfaces/FriendShip';
 import { FriendselectionService } from '../../../services/friendselection.service';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Message } from '../../../interfaces/Message';
@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit {
   messages: any[] = [];
   newMessage: string = '';
   loggedUser: User | null = null;
-  selectedFriend: Friend | null = null;
+  selectedFriend: Friendship | null = null;
   attachment: string | null = null;
   fileName = '';
   zoom = 15;
@@ -68,7 +68,7 @@ export class ChatComponent implements OnInit {
     });
 
     this.friendSelectionService.selectedFriend$.subscribe(
-      (friend: Friend | null) => {
+      (friend: Friendship | null) => {
         this.selectedFriend = friend;
         if (friend) {
           this.fetchMessages(friend.friend.id);
@@ -226,6 +226,10 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  hideChat() {
+    this.chatContainer.nativeElement.style.display = 'none';
+    this.friendSelectionService.selectFriend(null);
+  }
   ngAfterViewInit() {
     console.log('Message list element:', this.messageList);
     this.scrollToBottom();

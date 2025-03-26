@@ -1,10 +1,16 @@
-<div class="container">
-  <h2>Friends</h2>
+<div
+  class="container-fluid p-1 justify-content-center align-items-center d-flex flex-column"
+  w-100
+>
+  <p class="fs-3 pt-2 border-4 border-bottom">Friends</p>
   <div
     *ngFor="let friend of friends; trackBy: trackById"
     class="friend"
     (click)="selectFriend(friend)"
+    style="cursor: pointer"
   >
-    <h3>{{ friend.friend.firstName }} {{ friend.friend.lastName }}</h3>
+    <p class="fs-4 text-center">
+      {{ friend.friend.firstName }} {{ friend.friend.lastName }}
+    </p>
   </div>
 </div>

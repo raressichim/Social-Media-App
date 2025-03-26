@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Friend } from '../interfaces/Friend';
+import { Friendship } from '../interfaces/FriendShip';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FriendselectionService {
-  private selectedFriendSubject = new BehaviorSubject<Friend | null>(null);
+  private selectedFriendSubject = new BehaviorSubject<Friendship | null>(null);
   selectedFriend$ = this.selectedFriendSubject.asObservable();
 
-  selectFriend(friend: Friend): void {
+  selectFriend(friend: Friendship | null): void {
     this.selectedFriendSubject.next(friend);
   }
 
-  getSelectedFriend(): Friend | null {
+  getSelectedFriend(): Friendship | null {
     return this.selectedFriendSubject.value;
   }
 }

@@ -1,4 +1,4 @@
-.container {
+/* .container {
   display: flex;
   height: 100vh;
   top: 4.7em;
@@ -45,19 +45,7 @@
   transition: color 0.5s;
 }
 
-.left-panel .left-navigator:hover {
-  background-color: #14213d;
-  border-radius: 10px;
-}
 
-.left-panel .left-navigator:hover a {
-  color: white;
-  user-select: none;
-}
-
-.left-panel .left-navigator:hover a svg path {
-  fill: white;
-}
 
 .left-navigator a svg {
   width: 24px;
@@ -67,4 +55,18 @@
 
 .left-navigator a svg path {
   fill: #0c0c0c67;
+} */
+
+.left-navigator:hover {
+  background-color: #14213d;
+  border-radius: 10px;
+}
+
+.left-navigator:hover a {
+  color: white !important;
+  user-select: none;
+}
+
+.left-navigator:hover a svg path {
+  fill: white;
 }

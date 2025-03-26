@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -24,6 +29,8 @@ import {
   style,
   transition,
 } from '@angular/animations';
+import { FriendService } from '../../services/friend.service';
+import { Friendship } from '../../interfaces/FriendShip';
 
 @Component({
   selector: 'app-header',
@@ -54,24 +61,30 @@ import {
           opacity: 0,
         })
       ),
-
       transition('void <=> *', [animate(200)]),
     ]),
   ],
 })
 export class HeaderComponent {
+  @ViewChild('searchIcon') searchIcon!: ElementRef;
+  @ViewChild('friendList') friendList!: ElementRef;
   search: String = '';
   filteredUsers: User[] = [];
   allUsers: User[] = [];
   userId: number | null = null;
   loggedUser: User | null = null;
   showSearch: boolean = false;
+  isCollapsed = false;
+  friendRequestList: Friendship[] = [];
+  friendRequestCounter = 0;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private authService: AuthService,
-    private userIdService: UserIdServiceService
+    private userIdService: UserIdServiceService,
+    private friendService: FriendService,
+    private cd: ChangeDetectorRef
   ) {
     this.filteredUsers = this.allUsers;
   }
@@ -94,10 +107,32 @@ export class HeaderComponent {
         console.error('Error fetching friends:', err);
       },
     });
-    console.log(this.allUsers);
+    this.friendService.friendRequests$.subscribe((request) => {
+      this.friendRequestList = request;
+      this.friendRequestCounter = this.friendRequestList.length;
+    });
+  }
+  getFriendRequests() {
+    this.friendService.getFriendRequests();
   }
 
-  goToProfile() {
+  acceptFriendship(friendship: Friendship) {
+    this.friendService
+      .acceptFriendship(friendship.user.id)
+      .subscribe((response) => {
+        this.friendService.addFriend(response);
+        this.friendService.getFriendRequests();
+      });
+  }
+
+  declineFriendship(id: number) {
+    this.friendService.declineFriendship(id).subscribe((response) => {
+      console.log(response);
+      this.friendService.getFriendRequests();
+    });
+  }
+
+  goToProfile(id: number | undefined) {
     if (this.userId !== null) {
       this.userIdService.setUserId(this.userId);
       this.router.navigate(['/home/profile']);
@@ -108,6 +143,10 @@ export class HeaderComponent {
 
   goToUserProfile(userId: number) {
     this.userIdService.setUserId(userId);
+    this.filteredUsers = [];
+    this.showSearch = false;
+    this.searchIcon.nativeElement.style.display = 'inline';
+    this.search = '';
     this.router.navigate(['/home/profile']);
   }
 
@@ -129,5 +168,11 @@ export class HeaderComponent {
 
   toggleSearch() {
     this.showSearch = !this.showSearch;
+    this.searchIcon.nativeElement.style.setProperty(
+      'display',
+      'none',
+      'important'
+    );
+    console.log(this.searchIcon.nativeElement.style.display);
   }
 }

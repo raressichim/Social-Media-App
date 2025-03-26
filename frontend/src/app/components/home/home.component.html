@@ -1,8 +1,8 @@
-<div class="container">
-  <app-sidebar class="sidebar"></app-sidebar>
+<div class="container-fluid d-flex w-100 m-0 p-0">
+  <app-sidebar class="col-2"></app-sidebar>
   <!-- <app-feed class="feed"></app-feed> -->
-  <div class="feed"><router-outlet></router-outlet></div>
+  <div class="col-8"><router-outlet></router-outlet></div>
 
   <app-chat *ngIf="selectedFriend"></app-chat>
-  <app-friend-list class="friendlist"></app-friend-list>
+  <app-friend-list class="col-2"></app-friend-list>
 </div>

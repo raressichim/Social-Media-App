@@ -5,7 +5,7 @@ import { FriendListComponent } from './friend-list/friend-list.component';
 import { ChatComponent } from './chat/chat.component';
 import { MatCommonModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { Friend } from '../../interfaces/Friend';
+import { Friendship } from '../../interfaces/FriendShip';
 import { FriendselectionService } from '../../services/friendselection.service';
 import { RouterOutlet } from '@angular/router';
 
@@ -24,13 +24,13 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  selectedFriend: Friend | null = null;
+  selectedFriend: Friendship | null = null;
 
   constructor(private friendSelectionService: FriendselectionService) {}
 
   ngOnInit(): void {
     this.friendSelectionService.selectedFriend$.subscribe(
-      (friend: Friend | null) => {
+      (friend: Friendship | null) => {
         this.selectedFriend = friend;
       }
     );

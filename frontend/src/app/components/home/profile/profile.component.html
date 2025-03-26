@@ -2,6 +2,18 @@
   <div class="top-container">
     <img src="profile-pic.png" alt="" class="profile-photo" />
     <h2 class="name">{{ user?.firstName }} {{ user?.lastName }}</h2>
+    <div *ngIf="areAlreadyFriends(); else elseBlock">
+      <button class="btn btn-primary disabled border-0">Friends ✅</button>
+    </div>
+    <ng-template #elseBlock
+      ><button
+        *ngIf="loggedUser?.id !== userId"
+        class="btn btn-primary border-0"
+        (click)="requestFriend()"
+      >
+        Add friend
+      </button></ng-template
+    >
   </div>
   <h2 class="post-header">Posts</h2>
   <div class="posts">

@@ -1,9 +1,13 @@
-<div class="container">
+<div
+  class="container-fluid h-25 justify-content-center d-flex flex-column pt-3 rounded-3 p-0"
+>
   @for (post of posts; track $index) {
-  <div class="post">
-    <h3>{{ post.user.firstName }} {{ post.user.lastName }}</h3>
-    <h4>{{ post.relativeTime }}</h4>
-    <p>{{ post.body }}</p>
+  <div
+    class="border border-3 bg-white rounded-3 mb-2 p-3 d-flex flex-column justify-content-between"
+  >
+    <p class="fs-5">{{ post.user.firstName }} {{ post.user.lastName }}</p>
+    <p class="fs-5">{{ post.relativeTime }}</p>
+    <p class="fs-6">{{ post.body }}</p>
   </div>
   }
 </div>

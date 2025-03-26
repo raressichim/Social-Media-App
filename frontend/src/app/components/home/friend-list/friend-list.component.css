@@ -1,4 +1,4 @@
-.container {
+/* .container {
   box-sizing: border-box;
   height: 100vh;
   background-color: white;
@@ -17,25 +17,20 @@
 .container h2 {
   text-align: center;
   margin-bottom: 1em;
-}
+} */
 
-.friend:first-of-type {
+/* .friend:first-of-type {
   border-top: 1px solid rgba(128, 128, 128, 0.329);
 }
 
 .friend {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
   border-bottom: 1px solid rgba(128, 128, 128, 0.329);
-  cursor: pointer;
-}
-
+} */
+/* 
 .friend h3 {
   padding: 1em;
   text-decoration: none;
   color: black;
   font-weight: 500;
   padding-left: 1em;
-}
+} */
