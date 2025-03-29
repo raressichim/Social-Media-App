@@ -15,7 +15,13 @@ import { User } from '../../interfaces/User';
 export class SigninComponent {
   email: string = '';
   password: string = '';
-  loggedUser: User = { id: 0, firstName: '', lastName: '', email: '' };
+  loggedUser: User = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    picture: '',
+  };
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
@@ -29,6 +35,7 @@ export class SigninComponent {
         console.error(`Login failed for ${this.email}`, error);
       },
     });
+    this.authService.getLoggedUser();
   }
 
   onForgotPassword(): void {

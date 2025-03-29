@@ -34,7 +34,14 @@ export class AuthService {
     return this.http.post<any>(logoutUrl, headers, { withCredentials: true });
   }
 
-  getLoggedUser(): User | null {
-    return this.loggedUserSubject.value;
+  getLoggedUser(): void {
+    this.http
+      .get<User>('http://localhost:8080/api/auth', {
+        withCredentials: true,
+      })
+      .subscribe((user: User) => {
+        this.loggedUserSubject.next(user);
+        console.log(this.loggedUser$);
+      });
   }
 }

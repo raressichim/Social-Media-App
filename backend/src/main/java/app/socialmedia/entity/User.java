@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class User {
     private String password;
 
     @Lob
-    private byte[] picture;
+    private Blob picture;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)

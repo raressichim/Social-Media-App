@@ -10,11 +10,12 @@ import { UserService } from '../../../services/user.service';
 import { formatDistanceToNow } from 'date-fns';
 import { Post } from '../../../interfaces/Post';
 import { FriendService } from '../../../services/friend.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatDivider, CommonModule],
+  imports: [MatDivider, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -33,6 +34,7 @@ export class ProfileComponent {
   ) {}
 
   ngOnInit(): void {
+    this.authService.getLoggedUser();
     this.authService.loggedUser$.subscribe((logged: User | null) => {
       this.loggedUser = logged;
     });
@@ -73,5 +75,16 @@ export class ProfileComponent {
 
   checkFriends() {
     console.log(this.areAlreadyFriends());
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.user!.picture = file;
+    }
+  }
+
+  saveProfile() {
+    this.userService.editUser(this.user).subscribe();
   }
 }

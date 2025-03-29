@@ -77,6 +77,7 @@ export class HeaderComponent {
   isCollapsed = false;
   friendRequestList: Friendship[] = [];
   friendRequestCounter = 0;
+  isProfileMenuOpen = false;
 
   constructor(
     private userService: UserService,
@@ -94,11 +95,13 @@ export class HeaderComponent {
   }
 
   ngOnInit(): void {
+    this.authService.getLoggedUser();
     this.authService.loggedUser$.subscribe((user: User | null) => {
       this.loggedUser = user;
+      console.log(this.loggedUser);
+      console.log(user);
       this.userId = this.loggedUser?.id ?? null;
     });
-
     this.userService.getUsers().subscribe({
       next: (users) => {
         this.allUsers = users;
@@ -132,10 +135,25 @@ export class HeaderComponent {
     });
   }
 
+  toggleProfileMenu() {
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  logout() {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/']);
+    });
+
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+    this.loggedUser = null;
+  }
+
   goToProfile(id: number | undefined) {
+    console.log(id);
     if (this.userId !== null) {
       this.userIdService.setUserId(this.userId);
       this.router.navigate(['/home/profile']);
+      this.isProfileMenuOpen = !this.isProfileMenuOpen;
     } else {
       console.error('User ID is null');
     }
@@ -156,6 +174,12 @@ export class HeaderComponent {
       return;
     }
 
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].id === this.loggedUser?.id) {
+        this.allUsers.splice(i, 1);
+      }
+    }
+
     this.filteredUsers = this.allUsers.filter((user) =>
       user?.firstName
         .toLowerCase()
@@ -163,7 +187,6 @@ export class HeaderComponent {
         .concat(user?.lastName.toLowerCase())
         .includes(text.toLowerCase())
     );
-    console.log(this.filteredUsers);
   }
 
   toggleSearch() {

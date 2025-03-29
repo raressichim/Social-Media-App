@@ -111,3 +111,8 @@ svg {
     width: 100% !important;
   }
 }
+
+.link-primary {
+  color: #ffeccc !important;
+  text-decoration-color: #ffeccc !important;
+}

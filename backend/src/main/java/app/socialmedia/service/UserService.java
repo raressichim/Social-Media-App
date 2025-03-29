@@ -1,5 +1,6 @@
 package app.socialmedia.service;
 
+import app.socialmedia.dto.EditUserDTO;
 import app.socialmedia.dto.UserRequestDto;
 import app.socialmedia.dto.UserResponseDto;
 import app.socialmedia.entity.User;
@@ -70,6 +71,16 @@ public class UserService implements UserDetailsService {
     public UserResponseDto findUserById(Long userId) {
         UserResponseDto user = new UserResponseDto();
         User tempUser = userRepository.findById(userId).orElse(null);
+        return modelMapper.map(tempUser, UserResponseDto.class);
+    }
+
+    public UserResponseDto updateUser(UserDetails user, EditUserDTO updatedUser) {
+        User tempUser = userRepository.findByEmail(user.getUsername());
+        modelMapper.map(updatedUser, tempUser);
+        System.out.println(updatedUser);
+        System.out.println(tempUser);
+        userRepository.save(tempUser);
+
         return modelMapper.map(tempUser, UserResponseDto.class);
     }
 }

@@ -20,4 +20,10 @@ export class UserService {
       withCredentials: true,
     });
   }
+
+  editUser(user: User | null): Observable<any> {
+    return this.http.post<any>('http://localhost:8080/api/users/edit', user, {
+      withCredentials: true,
+    });
+  }
 }
