@@ -16,6 +16,4 @@ public class EditUserDTO {
     private String lastName;
 
     private String email;
-
-    private Blob picture;
 }

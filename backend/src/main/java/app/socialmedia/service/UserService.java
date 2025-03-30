@@ -77,8 +77,6 @@ public class UserService implements UserDetailsService {
     public UserResponseDto updateUser(UserDetails user, EditUserDTO updatedUser) {
         User tempUser = userRepository.findByEmail(user.getUsername());
         modelMapper.map(updatedUser, tempUser);
-        System.out.println(updatedUser);
-        System.out.println(tempUser);
         userRepository.save(tempUser);
 
         return modelMapper.map(tempUser, UserResponseDto.class);

@@ -27,4 +27,14 @@ export class FileService {
         })
       );
   }
+
+  upload(fileUrl: FormData): Observable<any> {
+    return this.http.post<any>(
+      'http://localhost:8080/api/files/profile-picture',
+      fileUrl,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }

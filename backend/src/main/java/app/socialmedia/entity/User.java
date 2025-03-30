@@ -33,8 +33,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Lob
-    private Blob picture;
+
+    private String picture;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)

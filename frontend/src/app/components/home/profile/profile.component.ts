@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Post } from '../../../interfaces/Post';
 import { FriendService } from '../../../services/friend.service';
 import { FormsModule } from '@angular/forms';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,13 +25,16 @@ export class ProfileComponent {
   userId: number | null = null;
   user: User | null = null;
   loggedUser: User | null = null;
+  fileUrl = '';
+  file = '';
 
   constructor(
     private postService: PostService,
     private userIdService: UserIdServiceService,
     private userService: UserService,
     private friendService: FriendService,
-    private authService: AuthService
+    private authService: AuthService,
+    private fileService: FileService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +60,7 @@ export class ProfileComponent {
         );
         this.userService.getUserById(this.userId).subscribe((user) => {
           this.user = user;
+          console.log(user);
         });
       } else {
         console.error('User ID is null');
@@ -78,13 +83,19 @@ export class ProfileComponent {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.user!.picture = file;
+    this.file = event.target.files[0];
+    if (this.file) {
+      this.user!.picture = this.file;
     }
   }
 
   saveProfile() {
+    const formData = new FormData();
+    formData.append('file', this.file);
     this.userService.editUser(this.user).subscribe();
+    this.fileService.upload(formData).subscribe((response) => {
+      this.user!.picture = 'http://localhost:8080/api/files' + response.fileUrl;
+      console.log(response.fileUrl);
+    });
   }
 }

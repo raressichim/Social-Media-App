@@ -16,5 +16,5 @@ public class UserResponseDto {
 
     private String email;
 
-    private byte[] picture;
+    private String picture;
 }
