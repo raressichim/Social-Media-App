@@ -152,7 +152,7 @@ export class HeaderComponent {
     console.log(id);
     if (this.userId !== null) {
       this.userIdService.setUserId(this.userId);
-      this.router.navigate(['/home/profile']);
+      this.router.navigate([`/home/profile/${this.userId}`]);
       this.isProfileMenuOpen = !this.isProfileMenuOpen;
     } else {
       console.error('User ID is null');
@@ -165,7 +165,7 @@ export class HeaderComponent {
     this.showSearch = false;
     this.searchIcon.nativeElement.style.display = 'inline';
     this.search = '';
-    this.router.navigate(['/home/profile']);
+    this.router.navigate([`/home/profile/${userId}`]);
   }
 
   filterResults(text: string) {

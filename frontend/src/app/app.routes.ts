@@ -14,7 +14,6 @@ export const routes: Routes = [
       );
     },
   },
-  { path: 'home/profile/:userId', component: ProfileComponent },
   {
     path: 'signup',
     loadComponent: () => {
@@ -33,7 +32,11 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'feed', pathMatch: 'full' },
       { path: 'feed', component: FeedComponent },
-      { path: 'profile', component: ProfileComponent },
+      {
+        path: 'profile/:userId',
+        component: ProfileComponent,
+        pathMatch: 'full',
+      },
     ],
   },
 ];

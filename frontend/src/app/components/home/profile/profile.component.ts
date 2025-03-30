@@ -34,7 +34,8 @@ export class ProfileComponent {
     private userService: UserService,
     private friendService: FriendService,
     private authService: AuthService,
-    private fileService: FileService
+    private fileService: FileService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -42,36 +43,29 @@ export class ProfileComponent {
     this.authService.loggedUser$.subscribe((logged: User | null) => {
       this.loggedUser = logged;
     });
-    this.userIdService.userId$.subscribe((userId) => {
-      this.userId = userId;
-      if (this.userId !== null) {
-        this.postService.getPostsForUser(this.userId).subscribe(
-          (data) => {
-            this.posts = data.map((post: Post) => ({
-              ...post,
-              relativeTime: formatDistanceToNow(new Date(post.date), {
-                addSuffix: true,
-              }),
-            }));
-          },
-          (error) => {
-            console.error('Error fetching posts: ', error);
-          }
-        );
-        this.userService.getUserById(this.userId).subscribe((user) => {
-          this.user = user;
-          console.log(user);
-        });
-      } else {
-        console.error('User ID is null');
-      }
+    this.route.paramMap.subscribe((params) => {
+      this.userId = Number(params.get('userId'));
+      this.userService.getUserById(this.userId).subscribe((tempUser) => {
+        this.user = tempUser;
+      });
+      this.postService.getPostsForUser(this.userId).subscribe(
+        (data) => {
+          this.posts = data.map((post: Post) => ({
+            ...post,
+            relativeTime: formatDistanceToNow(new Date(post.date), {
+              addSuffix: true,
+            }),
+          }));
+        },
+        (error) => {
+          console.error('Error fetching posts: ', error);
+        }
+      );
     });
   }
 
   requestFriend(): void {
-    this.friendService.requestFriend(this.userId).subscribe((response) => {
-      console.log(response);
-    });
+    this.friendService.requestFriend(this.userId).subscribe();
   }
 
   areAlreadyFriends(): boolean {
