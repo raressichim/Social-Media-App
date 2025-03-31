@@ -2,20 +2,36 @@ import { Component } from '@angular/core';
 import { PostService } from '../../../../services/post.service';
 import { Post } from '../../../../interfaces/Post';
 import { CommonModule } from '@angular/common';
-import { formatDistanceToNow } from 'date-fns';
+import { add, formatDistanceToNow } from 'date-fns';
 import { OnInit } from '../../../../interfaces/OnInit';
+import { Comment } from '../../../../interfaces/comment';
+import { CommentService } from '../../../../services/comment.service';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css',
 })
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
+  commentsByPostId: { [postId: number]: Comment[] } = [];
+  addComment = new FormGroup({
+    content: new FormControl(''),
+  });
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private commentService: CommentService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.postService.getPosts().subscribe({
@@ -32,10 +48,28 @@ export class PostListComponent implements OnInit {
             addSuffix: true,
           }),
         }));
+        this.posts.forEach((post) => {
+          this.commentService.getCommentsForPost(post).subscribe((comms) => {
+            this.commentsByPostId[post.id] = comms;
+          });
+        });
       },
+
       error: (error) => {
         console.log('Error updating posts', error);
       },
     });
+  }
+
+  onSubmit(postId: number): void {
+    this.commentService
+      .addComment(postId, this.addComment.get('content')?.value || '')
+      .subscribe((response) => {
+        this.commentsByPostId[postId] = [
+          ...(this.commentsByPostId[postId] || []),
+          response,
+        ];
+      });
+    this.addComment.reset();
   }
 }

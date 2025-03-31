@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { Comment } from './comment';
 import { User } from './User';
 
 export interface Post {
@@ -6,4 +8,5 @@ export interface Post {
   body: string;
   date: string;
   relativeTime: string;
+  comments: Comment[];
 }

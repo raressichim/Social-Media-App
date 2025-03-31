@@ -8,6 +8,38 @@
     <p class="fs-5">{{ post.user.firstName }} {{ post.user.lastName }}</p>
     <p class="fs-5">{{ post.relativeTime }}</p>
     <p class="fs-6">{{ post.body }}</p>
+    <div class="border-top d-flex flex-column pt-2">
+      <div class="w-100">
+        <form [formGroup]="addComment" (ngSubmit)="onSubmit(post.id)">
+          <input
+            type="text"
+            placeholder="Type your comment..."
+            formControlName="content"
+          />
+          <button class="btn btn-primary ms-2">Send</button>
+        </form>
+      </div>
+      <div class="pt-3">
+        @for (comment of commentsByPostId[post.id]; track $index) {
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row">
+            <img
+              [src]="
+                comment.user.picture ? comment.user.picture : 'profile-pic.png'
+              "
+              style="width: 25px; height: 25px; border-radius: 100%"
+              class="me-1"
+            />
+            <p class="fs-7">
+              {{ comment.user.firstName }} {{ comment.user.lastName }}
+            </p>
+          </div>
+          <p class="fs-8">{{ comment.content }}</p>
+        </div>
+        }
+      </div>
+    </div>
   </div>
+
   }
 </div>
